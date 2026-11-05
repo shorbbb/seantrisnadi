@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Sean Trisnadi</title>
+<meta name="description" content="Sean Trisnadi, videographer and photographer based in Los Angeles + Seattle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Benjamin Moore OC-117 (Simply White), approximate hex. Change here if you want it exact. */
+  --bg:#F7F5EB;
+  --ink:#000;
+  --tint:rgba(0,0,0,.08);
+  --beige:#dccdb2; /* intro + About page background */
+  --display:Inter,Helvetica,Arial,sans-serif;
+  --sans:Helvetica,"Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.65,0,.35,1);
+  --out:cubic-bezier(.22,1,.36,1);
+  --bounce:cubic-bezier(.34,1.56,.64,1);
+  --spring:cubic-bezier(.34,1.3,.64,1);
+  /* cursor: rounded black arrow with a thick white outline; hotspot at the tip */
+  --img:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 32 32'%3E%3Cg stroke-linejoin='round'%3E%3Cpath d='M9 6L25 18L15 22L9 27Z' transform='translate(1 1.5)' fill='%23000' stroke='%23000' stroke-width='7' opacity='.18'/%3E%3Cpath d='M9 6L25 18L15 22L9 27Z' fill='%23fff' stroke='%23fff' stroke-width='7'/%3E%3Cpath d='M9 6L25 18L15 22L9 27Z' fill='%23000' stroke='%23000' stroke-width='3'/%3E%3C/g%3E%3C/svg%3E");
+  --cur:var(--img) 4 2,auto;
+  --cur-p:var(--img) 4 2,pointer;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{cursor:var(--cur);-webkit-text-size-adjust:100%}
+body{--pg:var(--bg);background-color:var(--pg);color:var(--ink);font:12px/1.5 var(--sans);-webkit-font-smoothing:antialiased;transition:background-color .8s var(--ease),color .8s var(--ease)}
+body.on-about{--pg:var(--beige)}
+body.on-content{--pg:#0d0d0d;color:var(--bg)}
+body.locked{overflow:hidden}
+a{color:inherit;text-decoration:none}
+a,button,button *,.intro{cursor:var(--cur-p)}
+button{font:inherit;color:inherit;background:none;border:0;text-align:left;display:block;width:100%}
+img{display:block;max-width:100%}
+:focus-visible{outline:1px solid currentColor;outline-offset:3px}
+
+/* intro */
+.intro{position:fixed;inset:0;z-index:50;background:var(--beige);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;transition:opacity .5s var(--ease) .15s,visibility 0s .65s}
+.intro h1{font:700 clamp(22px,4vw,48px)/1 var(--display);letter-spacing:.04em;text-align:center}
+.wig{display:inline-block;filter:url(#wiggle)}
+@media(prefers-reduced-motion:reduce){.wig{filter:none}}
+.type{min-height:1.5em}
+.type::after{content:"";display:inline-block;width:1px;height:1em;background:currentColor;margin-left:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+.intro h1,.type{transition:transform .55s var(--out),opacity .35s ease,filter .5s ease}
+@keyframes blink{50%{opacity:0}}
+.stars{position:absolute;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+.star{position:absolute;left:var(--x);top:var(--y);width:calc(var(--s)*1vmax);aspect-ratio:1;margin:calc(var(--s)*-.5vmax) 0 0 calc(var(--s)*-.5vmax);filter:blur(calc(var(--b)*1px));opacity:0}
+.stars.go .star{animation:starIn 1.8s var(--out) var(--d,0s) both}
+.sp{display:block;width:100%;height:100%;animation:spin var(--t,80s) linear infinite var(--dir,normal)}
+.sp svg{display:block;width:100%;height:100%;fill:currentColor;overflow:visible;transform:rotate(var(--r,0deg))}
+@keyframes starIn{from{opacity:0;transform:scale(.04) rotate(-260deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.halo{position:absolute;left:0;top:0;z-index:-1;width:min(900px,170vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,.3) 30%,rgba(255,255,255,.1) 60%,rgba(255,255,255,0));opacity:0;pointer-events:none;transition:opacity .8s ease}
+.hint{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6;transition:opacity .3s ease}
+.intro.clap .hint,.intro.out .hint{opacity:0}
+/* clapperboard slate: pops in on click, clacks, then everything blurs away */
+.slate{position:absolute;left:50%;top:50%;width:min(170px,44vw);height:auto;overflow:visible;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.4) rotate(-8deg);transition:opacity .15s ease,transform .3s var(--bounce),filter .5s ease}
+.arm{transform-origin:12px 56px;transform:rotate(-26deg)}
+.intro.clap .slate{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
+.intro.clap .arm{animation:clack .12s .18s cubic-bezier(.6,0,1,.6) forwards}
+.intro.clap h1,.intro.clap .type{opacity:.06;filter:blur(4px)}
+@keyframes clack{to{transform:rotate(0)}}
+.tilt{transform-origin:100px 120px}
+.intro.clap .tilt{animation:tilt .3s .27s ease-out forwards}
+@keyframes tilt{40%{transform:rotate(-10deg) translateY(2px)}to{transform:rotate(-4deg)}}
+.intro.out{opacity:0;visibility:hidden;pointer-events:none}
+.intro.back{transition:opacity .5s ease,visibility 0s}
+.intro.out h1{opacity:0;transform:translateY(-18px) scale(1.06);filter:blur(10px)}
+.intro.out .type{opacity:0;transform:translateY(-8px);transition-delay:.05s}
+.intro.out .slate{opacity:0;transform:translate(-50%,-50%) translateY(-18px) scale(1.06);filter:blur(10px);transition:transform .55s var(--out),opacity .4s ease,filter .5s ease}
+
+/* shell: links down the left, name bottom-left */
+.site{opacity:0;transition:opacity .6s ease .15s}
+.site.on{opacity:1}
+.side{position:fixed;top:30px;left:42px;z-index:10;display:flex;flex-direction:column}
+.side a,.name{font-size:12px;line-height:25px;text-transform:uppercase}
+.side a{position:relative;width:max-content}
+.side a::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .45s var(--out)}
+.side a:hover::after,.side a:focus-visible::after{transform:scaleX(1);transform-origin:left}
+.side a::before{content:"";position:absolute;left:-18px;top:50%;width:10px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .4s var(--out)}
+.side a.active{-webkit-text-stroke:.35px currentColor}
+.side a.active::before{transform:scaleX(1)}
+.side a.active::after{transform:scaleX(0)}
+.name{position:fixed;left:42px;bottom:24px;z-index:10}
+main{position:relative;z-index:1;padding:30px 0 80px;min-height:100vh}
+#videography,#photography{padding:0 42px 0 clamp(150px,16vw,260px)}
+.view{display:none}
+.view.on{display:block}
+
+/* tab switch: old page lifts away, background shifts, new items wipe up in sequence */
+.view.leave{animation:leave .3s ease both}
+@keyframes leave{to{opacity:0;transform:translateY(-14px)}}
+.view.on .row,.view.on .ph,.view.on .about .rv{animation:reveal .9s var(--out) both;animation-delay:calc(var(--i,0)*70ms)}
+body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .about .rv{animation-delay:calc(.25s + var(--i,0)*70ms)}
+.view.leave .row,.view.leave .ph,.view.leave .about .rv{animation:none}
+@keyframes reveal{from{clip-path:inset(100% 0 0 0);transform:translateY(28px)}}
+.view.on .ccl{animation:reveal .9s var(--out) both;animation-delay:calc(var(--i,0)*90ms)}
+.view.on .reel{animation:fadein .9s ease both;animation-delay:calc(.25s + var(--i,0)*70ms)}
+.view.leave .ccl,.view.leave .reel{animation:none}
+@keyframes fadein{from{opacity:0}}
+
+/* videography: text list */
+.list{list-style:none}
+.row+.row{margin-top:clamp(14px,3.4vh,40px)}
+.it{font:400 clamp(18px,2vw,30px)/1.25 var(--sans);text-transform:uppercase;letter-spacing:-.01em;padding:.45em 0;opacity:.38;filter:blur(1.2px);transform-origin:0 50%;transition:opacity .4s ease,filter .4s ease,transform .55s var(--spring)}
+.it:hover,.it:focus-visible{opacity:1;filter:none;transform:scale(1.12)}
+@media(hover:none){.it{opacity:.85;filter:none}}
+
+/* photography: collage (columns are built in JS so photos read left to right) */
+.gallery{display:flex;gap:12px;align-items:flex-start}
+.gcol{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+.ph{position:relative;display:block;background:var(--tint)}
+.ph img{display:block;width:100%;height:auto;transition:transform .55s var(--out),box-shadow .55s ease}
+.ph:hover{z-index:2}
+.ph:hover img{transform:scale(1.045);box-shadow:0 14px 40px rgba(0,0,0,.28)}
+
+/* content creation: reels collage that fans out into a horizontal row as you scroll (dark page) */
+#content{padding:0;margin:-30px 0 -80px}
+.cc-stage{--cw:200px;--ch:356px;position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;padding-left:clamp(150px,16vw,260px)}
+.cc-text{position:relative;z-index:2;max-width:min(46vw,640px)}
+.cc-title{font:700 clamp(52px,8.4vw,136px)/.92 var(--display);letter-spacing:-.045em}
+.cc-title .ccl{display:block}
+.cc-title .ccl+.ccl{padding-left:.55em}
+.cc-desc{font-size:12.5px;line-height:1.6;max-width:36ch;margin-top:clamp(22px,4vh,40px);opacity:.78}
+.cc-desc a{text-decoration:underline;text-underline-offset:.2em}
+.cc-desc b{font-weight:700}
+.cc-hint{margin-top:clamp(22px,4vh,36px);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+.cc-cards{position:absolute;inset:0;pointer-events:none}
+.reel{position:absolute;left:0;top:0;width:var(--cw);height:var(--ch);z-index:var(--z,1);pointer-events:auto;will-change:transform}
+.reel:hover,.reel:focus-visible{z-index:99}
+.card{position:relative;display:block;width:100%;height:100%;border-radius:8px;overflow:hidden;background:linear-gradient(160deg,#2b2b2b,#131313);box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .55s var(--spring),box-shadow .55s ease}
+.reel:hover .card,.reel:focus-visible .card{transform:translateY(-16px) scale(1.08);box-shadow:0 28px 64px rgba(0,0,0,.7)}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card::after{content:"";position:absolute;left:50%;top:50%;margin:-14px 0 0 -9px;border-style:solid;border-width:14px 0 14px 22px;border-color:transparent transparent transparent rgba(247,245,235,.85)}
+.card em{position:absolute;z-index:1;left:12px;bottom:10px;font-style:normal;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.cc-bar{position:absolute;left:clamp(150px,16vw,260px);bottom:30px;width:clamp(80px,12vw,160px);height:2px;background:rgba(247,245,235,.22)}
+.cc-bar i{display:block;height:100%;background:currentColor;transform-origin:left;transform:scaleX(0)}
+
+/* about: text runs across the screen; the cut-out on the right swings slowly between pointing up and pointing down */
+#about{padding:0 42px 0 clamp(150px,16vw,260px)}
+.about{--cut:clamp(240px,32vw,500px);--tilt-up:-10deg;--tilt-down:30deg;position:relative;min-height:calc(100vh - 110px);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
+.atext{position:relative;z-index:1;display:flex;flex-direction:column;min-height:calc(100vh - 110px);width:calc(100% - var(--cut) - 24px)}
+.about .big{font-size:clamp(36px,5.6vw,84px);font-weight:700;line-height:.95;letter-spacing:-.04em}
+.about .quote{font-size:clamp(14px,1.3vw,18px);line-height:1.4;font-style:italic;max-width:30em;margin-top:clamp(14px,2.4vh,24px)}
+.arow{margin-top:auto;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr) minmax(0,1.2fr);gap:clamp(24px,4vw,64px);padding-top:clamp(40px,8vh,96px)}
+.about h3{font-size:10.5px;line-height:1;font-weight:400;letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:12px}
+.about p,.about .contact a{font-size:clamp(14px,1.15vw,16.5px);line-height:1.5;letter-spacing:-.005em}
+.about .bio p+p{margin-top:.8em}
+.about .contact p{margin-bottom:.9em}
+.about .contact a{display:block;width:max-content;max-width:100%;overflow-wrap:anywhere;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em}
+.about .contact a+a{margin-top:.3em}
+.cutout{position:absolute;right:0;bottom:0;width:var(--cut);pointer-events:none}
+.cutout img{display:block;width:100%;height:auto;transform-origin:50% 88%;animation:swing 10s ease-in-out infinite;filter:drop-shadow(0 18px 30px rgba(0,0,0,.18))}
+@keyframes swing{0%,100%{transform:rotate(var(--tilt-up)) translateY(0)}50%{transform:rotate(var(--tilt-down)) translateY(-10px)}}
+
+/* lightbox (photos + video player) */
+.lb{position:fixed;inset:0;z-index:100;display:none;background:rgba(0,0,0,.94);color:#fff;padding:56px 16px 24px}
+.lb.on{display:block}
+.lb-box{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.lb.on .lb-box>*{animation:lbin .5s var(--out)}
+@keyframes lbin{from{opacity:0;transform:scale(.86)}}
+.lb img{max-width:100%;max-height:100%;object-fit:contain}
+.lb iframe{display:block;width:100%;height:auto;aspect-ratio:16/9;border:0;background:#000}
+.player{width:min(100%,1400px,calc((100vh - 130px)*1.7778))}
+.player p,.player a{display:block;margin-top:10px;font-size:12px;text-transform:uppercase;text-align:right}
+.player a{text-decoration:underline;text-underline-offset:3px}
+.lb .x{position:absolute;top:10px;right:14px;width:auto;font:300 30px/1 var(--sans);padding:8px 12px}
+.lb .nav{position:absolute;top:50%;width:auto;transform:translateY(-50%);font:300 38px/1 var(--sans);padding:16px 18px;opacity:.7}
+.lb .nav:hover{opacity:1}
+.lb .nav[hidden]{display:none}
+.lb .prev{left:4px}
+.lb .next{right:4px}
+.reelbox{display:flex;flex-direction:column;align-items:center}
+.reelbox iframe{width:min(94vw,520px);height:min(84vh,920px);aspect-ratio:auto;background:#fff;border-radius:6px}
+.reelbox a{margin-top:10px;font-size:12px;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px}
+
+@media(max-width:760px){
+  .side{top:0;left:0;right:0;flex-direction:row;gap:18px;padding:6px 14px;background-color:var(--pg);transition:background-color .8s var(--ease)}
+  .name{left:0;right:0;bottom:0;padding:4px 14px;background-color:var(--pg);transition:background-color .8s var(--ease)}
+  main{padding:48px 14px 64px}
+  #videography,#photography,#about{padding:0}
+  #about{padding:0}
+  #content{margin:-48px -14px -64px}
+  .cc-stage{align-items:flex-start;padding:76px 14px 0}
+  .cc-title{font-size:15vw}
+  .cc-text{max-width:100%}
+  .cc-bar{left:14px;bottom:44px}
+  .side{white-space:nowrap;overflow-x:auto;scrollbar-width:none}
+  .gallery,.gcol{gap:8px}
+  .about{--cut:min(64vw,280px);display:flex;flex-direction:column;min-height:0}
+  .atext{width:100%;min-height:0}
+  .about .big{font-size:15vw}
+  .arow{grid-template-columns:1fr;gap:28px;padding-top:36px}
+  .cutout{position:relative;align-self:flex-end;margin-top:28px}
+}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-delay:0s!important;animation-delay:0s!important}}
+</style>
+</head>
+<body class="locked">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wiggle" x="-10%" y="-40%" width="120%" height="180%"><feTurbulence type="fractalNoise" baseFrequency=".02 .06" numOctaves="2" seed="3" result="n"><animate attributeName="baseFrequency" values=".02 .06;.028 .085;.02 .06" dur="9s" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+
+<!-- INTRO -->
+<div class="intro" role="button" tabindex="0" aria-label="Enter site">
+<div class="stars" aria-hidden="true">
+    <svg width="0" height="0" style="position:absolute"><defs><polygon id="starshape" points="0.0,-50.0 12.6,-17.4 47.6,-15.5 20.4,6.6 29.4,40.5 0.0,21.5 -29.4,40.5 -20.4,6.6 -47.6,-15.5 -12.6,-17.4"/></defs></svg>
+    <span class="star" style="--x:78.5%;--y:15%;--s:29;--b:0;--t:110s;--dir:normal;--r:10deg;--d:0.05s;color:#6DC9D3"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:22%;--y:78%;--s:38;--b:0;--t:130s;--dir:reverse;--r:-18deg;--d:0.2s;color:#E1BE5E"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:31%;--y:25%;--s:17;--b:7;--t:90s;--dir:normal;--r:30deg;--d:0.35s;color:#C3E1BE"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:72%;--y:82%;--s:10.5;--b:6;--t:70s;--dir:reverse;--r:8deg;--d:0.5s;color:#F8C3C3"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:37%;--y:96%;--s:6.5;--b:9;--t:60s;--dir:normal;--r:40deg;--d:0.65s;color:#6DC9D3"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+  </div>
+  <div class="halo"></div>
+  <p class="hint">tap to continue</p>
+  <h1><span class="wig">Sean Trisnadi</span></h1>
+  <p class="type"></p>
+  <svg class="slate" viewBox="0 0 200 170" aria-hidden="true" fill="#000" stroke-linejoin="round">
+    <defs><g id="st" fill="#fff"><polygon points="24,36 40,36 30,56 14,56"/><polygon points="54,36 70,36 60,56 44,56"/><polygon points="84,36 100,36 90,56 74,56"/><polygon points="114,36 130,36 120,56 104,56"/><polygon points="144,36 160,36 150,56 134,56"/><polygon points="174,36 190,36 180,56 164,56"/></g></defs>
+    <g class="tilt">
+    <rect x="10" y="58" width="180" height="104" rx="8" stroke="#000" stroke-width="4"/>
+    <use href="#st" transform="translate(200,22) scale(-1,1)"/>
+    <path d="M24 100h66M24 124h44M24 146h92" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    <text x="126" y="104" fill="#fff" stroke="none" font-family="Helvetica,Arial,sans-serif" font-weight="700" font-size="14">TAKE 1</text>
+    <g class="arm"><rect x="10" y="36" width="180" height="20" rx="4" stroke="#000" stroke-width="4"/><use href="#st"/></g>
+    </g>
+  </svg>
+</div>
+
+<div class="site">
+  <nav class="side">
+    <a href="#videography" data-v="videography">Videography</a>
+    <a href="#photography" data-v="photography">Photography</a>
+    <a href="#content" data-v="content">Content Creation</a>
+    <a href="#about" data-v="about">About</a>
+  </nav>
+  <a class="name" href="#">Sean Trisnadi</a>
+
+  <main>
+    <!-- VIDEOGRAPHY (test): each button = one video; data-id is the YouTube video ID. -->
+    <section class="view" id="videography">
+      <ul class="list">
+        <li class="row"><button class="it" data-id="r9dWVg-kKuQ">2026 Senior Sign Out</button></li>
+        <li class="row"><button class="it" data-id="t6mg6VqMOVI">Floating Ideas</button></li>
+        <li class="row"><button class="it" data-id="nP12Rfxg6Qk">SMHS Basketball Senior Night 26</button></li>
+        <li class="row"><button class="it" data-id="b2n_G1oPKVA">Fractals</button></li>
+        <li class="row"><button class="it" data-id="ptNAgH3mzdg">Ditto AI (editor)</button></li>
+      </ul>
+    </section>
+
+    <!-- PHOTOGRAPHY: small versions in assets/photos/thumb, big versions (opened on click) in assets/photos/full.
+         data-r = height / width, so the collage can balance its columns before images load. -->
+    <section class="view" id="photography">
+      <div class="gallery">
+        <button class="ph" data-r="1.7762" data-full="assets/photos/full/sea05635-enhanced-nr.jpg"><img src="assets/photos/thumb/sea05635-enhanced-nr.jpg" width="563" height="1000" alt="Dancer in red and green stage light" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/7iv01291.jpg"><img src="assets/photos/thumb/7iv01291.jpg" width="1000" height="667" alt="Climber on a large boulder, black and white" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea09647.jpg"><img src="assets/photos/thumb/sea09647.jpg" width="1000" height="667" alt="Dancer in flowing fabric under teal light" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="1.4993" data-full="assets/photos/full/7iv01128.jpg"><img src="assets/photos/thumb/7iv01128.jpg" width="667" height="1000" alt="Portrait in an arched corridor" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea02490.jpg"><img src="assets/photos/thumb/sea02490.jpg" width="1000" height="667" alt="Silver Skyline GT-R on a Tokyo street" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="1.7762" data-full="assets/photos/full/sea05698-enhanced-nr.jpg"><img src="assets/photos/thumb/sea05698-enhanced-nr.jpg" width="563" height="1000" alt="Dancers in black on a smoky stage, black and white" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea01632.jpg"><img src="assets/photos/thumb/sea01632.jpg" width="1000" height="667" alt="Climber on a boulder face, black and white" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="1.4993" data-full="assets/photos/full/sea06366.jpg"><img src="assets/photos/thumb/sea06366.jpg" width="667" height="1000" alt="Cyclist in a blurred jump, black and white" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea00833.jpg"><img src="assets/photos/thumb/sea00833.jpg" width="1000" height="667" alt="Street vendor seated beside his cart, black and white" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="1.4993" data-full="assets/photos/full/sea05292.jpg"><img src="assets/photos/thumb/sea05292.jpg" width="667" height="1000" alt="Basketball players fighting for position" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea08118.jpg"><img src="assets/photos/thumb/sea08118.jpg" width="1000" height="667" alt="Graduate in cap and gown facing a grocery dairy aisle" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="1.4993" data-full="assets/photos/full/sea03799.jpg"><img src="assets/photos/thumb/sea03799.jpg" width="667" height="1000" alt="Man in a suit walking through a sunlit street" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.5630" data-full="assets/photos/full/sea05799.jpg"><img src="assets/photos/thumb/sea05799.jpg" width="1000" height="563" alt="Yellow McLaren on a curving road" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="1.4993" data-full="assets/photos/full/7iv01338.jpg"><img src="assets/photos/thumb/7iv01338.jpg" width="667" height="1000" alt="Milky Way over the desert, vertical" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea04449.jpg"><img src="assets/photos/thumb/sea04449.jpg" width="1000" height="667" alt="Dancers in silhouette against green light" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea01027.jpg"><img src="assets/photos/thumb/sea01027.jpg" width="1000" height="667" alt="Hong Kong skyline and harbor under clouds" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="1.4993" data-full="assets/photos/full/sea06107.jpg"><img src="assets/photos/thumb/sea06107.jpg" width="667" height="1000" alt="Wrestlers locked up on a blue mat" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.5630" data-full="assets/photos/full/sea02703.jpg"><img src="assets/photos/thumb/sea02703.jpg" width="1000" height="563" alt="Silhouette of a photographer at a snowy gas station at night" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.5630" data-full="assets/photos/full/sea09608-enhanced-nr.jpg"><img src="assets/photos/thumb/sea09608-enhanced-nr.jpg" width="1000" height="563" alt="Dancers on a smoky stage, black and white" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="1.4993" data-full="assets/photos/full/sea03730-3.jpg"><img src="assets/photos/thumb/sea03730-3.jpg" width="667" height="1000" alt="Wrestlers mid-throw on a blue mat" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea04549.jpg"><img src="assets/photos/thumb/sea04549.jpg" width="1000" height="667" alt="Street guitarist smiling, black and white" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/sea05624.jpg"><img src="assets/photos/thumb/sea05624.jpg" width="1000" height="667" alt="Crowd at the Senso-ji temple gate with motion blur" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.5630" data-full="assets/photos/full/sea00550.jpg"><img src="assets/photos/thumb/sea00550.jpg" width="1000" height="563" alt="Robotics team huddle at a competition" loading="lazy" decoding="async"></button>
+        <button class="ph" data-r="0.6670" data-full="assets/photos/full/7iv01331.jpg"><img src="assets/photos/thumb/7iv01331.jpg" width="1000" height="667" alt="Milky Way over a desert landscape" loading="lazy" decoding="async"></button>
+      </div>
+    </section>
+
+    <!-- CONTENT CREATION: reel covers go in assets/reels/01.jpg ... 12.jpg (vertical 9:16); data-id is the Instagram reel ID -->
+    <section class="view" id="content">
+      <div class="cc-track">
+        <div class="cc-stage">
+          <div class="cc-text">
+            <h2 class="cc-title">
+              <span class="ccl">Content</span>
+              <span class="ccl">Creation</span>
+            </h2>
+            <p class="cc-desc ccl">I have been creating content for about two years as well and have built an audience around my videography and editing. I often post my personal projects and tutorials, feel free to check out my full page <a href="https://instagram.com/seantrisnadi" target="_blank" rel="noopener"><b>here</b></a>!</p>
+            <p class="cc-hint ccl">scroll to see more</p>
+          </div>
+          <div class="cc-cards">
+          <button class="reel" data-id="DdNVB1BNCWl" aria-label="Open reel 1"><span class="card"><img src="assets/reels/01.jpg" alt="" onerror="this.remove()"><em>Reel 01</em></span></button>
+          <button class="reel" data-id="DdBNcraSiLm" aria-label="Open reel 2"><span class="card"><img src="assets/reels/02.jpg" alt="" onerror="this.remove()"><em>Reel 02</em></span></button>
+          <button class="reel" data-id="DbmFzDDv7tv" aria-label="Open reel 3"><span class="card"><img src="assets/reels/03.jpg" alt="" onerror="this.remove()"><em>Reel 03</em></span></button>
+          <button class="reel" data-id="DesMeaDBFU6" aria-label="Open reel 4"><span class="card"><img src="assets/reels/04.jpg" alt="" onerror="this.remove()"><em>Reel 04</em></span></button>
+          <button class="reel" data-id="DVcr3DgEcMQ" aria-label="Open reel 5"><span class="card"><img src="assets/reels/05.jpg" alt="" onerror="this.remove()"><em>Reel 05</em></span></button>
+          <button class="reel" data-id="DXbOwZDD3bq" aria-label="Open reel 6"><span class="card"><img src="assets/reels/06.jpg" alt="" onerror="this.remove()"><em>Reel 06</em></span></button>
+          <button class="reel" data-id="DVKrsFtkRcL" aria-label="Open reel 7"><span class="card"><img src="assets/reels/07.jpg" alt="" onerror="this.remove()"><em>Reel 07</em></span></button>
+          <button class="reel" data-id="DbRdTM_BR6C" aria-label="Open reel 8"><span class="card"><img src="assets/reels/08.jpg" alt="" onerror="this.remove()"><em>Reel 08</em></span></button>
+          <button class="reel" data-id="DeqbANYPmgi" aria-label="Open reel 9"><span class="card"><img src="assets/reels/09.jpg" alt="" onerror="this.remove()"><em>Reel 09</em></span></button>
+          <button class="reel" data-id="DfI_E0XgLsg" aria-label="Open reel 10"><span class="card"><img src="assets/reels/10.jpg" alt="" onerror="this.remove()"><em>Reel 10</em></span></button>
+          <button class="reel" data-id="DYNmVVzyYyo" aria-label="Open reel 11"><span class="card"><img src="assets/reels/11.jpg" alt="" onerror="this.remove()"><em>Reel 11</em></span></button>
+          <button class="reel" data-id="DXtMJ1UCdMK" aria-label="Open reel 12"><span class="card"><img src="assets/reels/12.jpg" alt="" onerror="this.remove()"><em>Reel 12</em></span></button>
+          </div>
+          <div class="cc-bar"><i></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="view" id="about">
+      <div class="about">
+        <div class="atext">
+          <h2 class="big rv">Sean Trisnadi</h2>
+          <p class="quote rv">&ldquo;The cave you fear to enter holds the treasure you seek&rdquo;</p>
+          <div class="arow">
+            <div class="blk rv"><h3>Based</h3><p>Seattle and Los Angeles</p></div>
+            <div class="blk bio rv">
+              <p>Driven by a love for exploration, I&rsquo;ve been shooting, editing, and creating for the past two years.</p>
+              <p>When I&rsquo;m not on DaVinci Resolve, you can find me rock climbing or listening to music.</p>
+            </div>
+            <div class="blk contact rv">
+              <h3>Contact</h3>
+              <p>Feel free to message me about work or if you have any questions!</p>
+              <a href="https://instagram.com/seantrisnadi" target="_blank" rel="noopener">Instagram</a>
+              <a href="mailto:seantrisnadiofficial@gmail.com">seantrisnadiofficial@gmail.com</a>
+            </div>
+          </div>
+        </div>
+        <!-- cut-out of the photo; the slow up/down swing is the "swing" animation (change --tilt-up / --tilt-down on .about to adjust) -->
+        <div class="cutout rv" aria-hidden="true"><img src="assets/about-cutout.webp" alt=""></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- lightbox -->
+<div class="lb" role="dialog" aria-modal="true" aria-label="Viewer">
+  <button class="x" aria-label="Close">&times;</button>
+  <button class="nav prev" aria-label="Previous photo" hidden>&lsaquo;</button>
+  <button class="nav next" aria-label="Next photo" hidden>&rsaquo;</button>
+  <div class="lb-box"></div>
+</div>
+
+<script>
+(() => {
+  const embedUrl = (id, o) => `https://www.youtube.com/embed/${id}?${new URLSearchParams({ playsinline: 1, rel: 0, modestbranding: 1, ...(location.protocol.startsWith('http') ? { origin: location.origin } : {}), ...o })}`;
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const body = document.body, intro = $('.intro'), site = $('.site'), views = $$('.view'), links = $$('.side a');
+  const ids = views.map(v => v.id);
+
+  /* stagger index for the reveal animation */
+  views.forEach(v => $$('.row,.ph,.about .rv,.ccl,.reel', v).forEach((el, i) => el.style.setProperty('--i', Math.min(i, 10))));
+
+  /* page switching */
+  let token = 0;
+  function show(id, first) {
+    if (!ids.includes(id)) id = 'videography';
+    links.forEach(a => a.classList.toggle('active', a.dataset.v === id));
+    body.classList.toggle('on-about', id === 'about');
+    body.classList.toggle('on-content', id === 'content');
+    const next = $('#' + id), prev = $('.view.on'), t = ++token;
+    if (prev === next) { prev.classList.remove('leave'); return; }
+    const swap = () => {
+      if (t !== token) return;
+      views.forEach(v => v.classList.remove('on', 'leave'));
+      next.classList.add('on');
+      scrollTo(0, 0);
+      if (id === 'content') { ccLayout(); cur = 0; }
+    };
+    if (prev && !first) { prev.classList.add('leave'); setTimeout(swap, 320); } else swap();
+  }
+  window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+  $$('.site a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    if (a.classList.contains('name')) return goIntro();
+    const id = a.getAttribute('href').slice(1);
+    show(id);
+    try { location.hash = id; } catch (err) {} // hash is a bonus; navigation works without it
+  }));
+
+  /* intro: typewriter */
+  const words = ['Videographer', 'Photographer', 'Director of Photography', 'Music lover', 'Foot enthusiast', 'Rock climber'];
+  const typeEl = $('.type');
+  let w = 0, c = 0, del = false, timer;
+  function tick() {
+    const full = words[w];
+    c += del ? -1 : 1;
+    typeEl.textContent = full.slice(0, c);
+    let d = del ? 40 : 85;
+    if (!del && c === full.length) { del = true; d = 1400; }
+    else if (del && c === 0) { del = false; w = (w + 1) % words.length; d = 350; }
+    timer = setTimeout(tick, d);
+  }
+  tick();
+
+  /* intro: pastel stars zoom in spinning, then keep turning slowly */
+  const starsEl = $('.stars');
+  function popStars() { starsEl.classList.remove('go'); void starsEl.offsetWidth; starsEl.classList.add('go'); }
+  popStars();
+
+  /* intro: soft halo eases after the cursor */
+  const halo = $('.halo');
+  let hx = innerWidth / 2, hy = innerHeight / 2, tx = hx, ty = hy, raf;
+  intro.addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; halo.style.opacity = 1; });
+  function loop() {
+    hx += (tx - hx) * .12; hy += (ty - hy) * .12;
+    halo.style.transform = `translate(${hx}px,${hy}px) translate(-50%,-50%)`;
+    raf = requestAnimationFrame(loop);
+  }
+  loop();
+
+  /* intro -> site: slate claps, then the blur-out */
+  let busy = false;
+  function clap() {
+    if (busy) return;
+    busy = true;
+    intro.classList.add('clap');
+    setTimeout(() => enter(), 520);
+  }
+  function enter(instant) {
+    if (instant) intro.style.display = 'none';
+    intro.classList.add('out');
+    site.classList.add('on');
+    body.classList.remove('locked');
+    body.classList.add('entering');
+    setTimeout(() => body.classList.remove('entering'), 1800);
+    clearTimeout(timer);
+    cancelAnimationFrame(raf);
+    const h = location.hash.slice(1);
+    if (!ids.includes(h)) { try { history.replaceState(null, '', '#videography'); } catch (err) {} }
+    show(ids.includes(h) ? h : 'videography', true);
+  }
+  /* clicking the name (bottom-left) goes back to the intro */
+  function goIntro() {
+    if (!intro.classList.contains('out')) return;
+    intro.style.display = '';
+    intro.classList.add('back');
+    intro.classList.remove('out', 'clap');
+    busy = false;
+    body.classList.add('locked');
+    body.classList.remove('on-about', 'on-content');
+    site.classList.remove('on');
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (err) {}
+    clearTimeout(timer); w = 0; c = 0; del = false; typeEl.textContent = ''; tick(); popStars();
+    cancelAnimationFrame(raf); loop();
+    setTimeout(() => {
+      intro.classList.remove('back');
+      views.forEach(v => v.classList.remove('on', 'leave'));
+      links.forEach(a => a.classList.remove('active'));
+    }, 700);
+  }
+  intro.addEventListener('click', clap);
+  intro.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); clap(); } });
+
+  /* lightbox: photos (arrow keys or buttons to browse) and the video player */
+  const photos = $$('.ph'), lb = $('.lb'), box = $('.lb-box'), prevB = $('.lb .prev'), nextB = $('.lb .next');
+  let gi = -1;
+  function openLb(node, browse) {
+    box.replaceChildren(node);
+    lb.classList.add('on');
+    body.classList.add('locked');
+    prevB.hidden = nextB.hidden = !browse;
+    if (!browse) gi = -1;
+    $('.x').focus();
+  }
+  function closeLb() {
+    lb.classList.remove('on');
+    box.replaceChildren();
+    body.classList.remove('locked');
+    gi = -1;
+  }
+  function openPhoto(i) {
+    gi = (i + photos.length) % photos.length;
+    const t = $('img', photos[gi]), n = new Image();
+    n.src = photos[gi].dataset.full || t.src;
+    n.alt = t.alt;
+    openLb(n, true);
+  }
+  lb.addEventListener('click', e => {
+    if (e.target === lb || e.target === box || e.target.closest('.x')) closeLb();
+    else if (e.target === prevB) openPhoto(gi - 1);
+    else if (e.target === nextB) openPhoto(gi + 1);
+  });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('on')) return;
+    if (e.key === 'Escape') closeLb();
+    else if (gi > -1 && e.key === 'ArrowLeft') openPhoto(gi - 1);
+    else if (gi > -1 && e.key === 'ArrowRight') openPhoto(gi + 1);
+  });
+
+  /* photo collage: 3 columns (2 on phones); each photo goes into the shortest column so they read left to right */
+  const gal = $('.gallery');
+  let cols = 0;
+  function layout() {
+    const n = innerWidth <= 760 ? 2 : 3;
+    if (n === cols) return;
+    cols = n;
+    const cs = Array.from({ length: n }, () => Object.assign(document.createElement('div'), { className: 'gcol' })), hs = Array(n).fill(0);
+    photos.forEach(p => { const i = hs.indexOf(Math.min(...hs)); cs[i].append(p); hs[i] += +p.dataset.r; });
+    gal.replaceChildren(...cs);
+  }
+  layout();
+  addEventListener('resize', layout);
+  photos.forEach((b, i) => b.addEventListener('click', () => openPhoto(i)));
+
+  /* videos: a click opens the YouTube player (IFrame API, so failures are detectable).
+     YouTube refuses to play inside pages opened as local files (file://), so there a click opens YouTube in a new tab. */
+  const embeds = location.protocol !== 'file:';
+  let yt;
+  const loadYT = () => yt || (yt = new Promise((res, rej) => {
+    if (window.YT && YT.Player) return res();
+    window.onYouTubeIframeAPIReady = res;
+    const s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    s.onerror = rej;
+    document.head.append(s);
+  }));
+  function openVideo(it) {
+    const id = it.dataset.id, url = 'https://www.youtube.com/watch?v=' + id;
+    if (!embeds) { window.open(url, '_blank', 'noopener'); return; }
+    const wrap = document.createElement('div'), holder = document.createElement('div'), a = document.createElement('a');
+    wrap.className = 'player';
+    a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Watch on YouTube';
+    wrap.append(holder, a);
+    openLb(wrap);
+    let ready = false;
+    const fail = () => {
+      const m = document.createElement('p');
+      m.style.cssText = 'font-size:14px;text-align:left;text-transform:none';
+      m.textContent = 'This video can\u2019t play inline here.';
+      wrap.firstElementChild.replaceWith(m);
+    };
+    const t = setTimeout(() => { if (!ready) fail(); }, 7000);
+    loadYT().then(() => {
+      new YT.Player(holder, {
+        videoId: id,
+        playerVars: { autoplay: 1, playsinline: 1, rel: 0, modestbranding: 1 },
+        events: {
+          onReady: e => { ready = true; clearTimeout(t); e.target.playVideo(); },
+          onError: () => { clearTimeout(t); fail(); }
+        }
+      });
+    }).catch(() => { clearTimeout(t); fail(); });
+  }
+  $$('.it').forEach(it => it.addEventListener('click', () => openVideo(it)));
+
+  /* content creation: a collage of reels that fans out into a horizontal row as you scroll */
+  const cc = $('#content'), track = $('.cc-track'), stage = $('.cc-stage'), ctext = $('.cc-text'), reels = $$('.reel'), bar = $('.cc-bar i');
+  // [x, y, rotation, scale] of each reel in the collage (x/y in card widths/heights from the collage centre); the last six wait off-screen
+  const C = [[-.55, -.5, -9, .9], [.55, -.55, 7, 1], [0, .1, -3, 1.05], [.85, .25, 10, .95], [-.7, .6, 6, .85], [.25, .75, -7, .9],
+             [1.9, -.3, 8, .9], [2.2, .3, -6, .9], [2.5, -.1, 5, .9], [2.8, .35, -8, .9], [3.1, -.2, 6, .9], [3.4, .2, -5, .9]];
+  const Z = [3, 5, 6, 4, 2, 1, 7, 8, 9, 10, 11, 12];
+  let W, H, cw, ch, gap, x0, M, D, cur = 0;
+  const lerp = (a, b, t) => a + (b - a) * t, ease = t => 1 - Math.pow(1 - t, 3);
+  function ccLayout() {
+    W = stage.clientWidth; H = stage.clientHeight;
+    const phone = W < 760;
+    ch = Math.min(H * (phone ? .5 : .58), 560); cw = ch * 9 / 16; gap = cw * .14;
+    x0 = phone ? W * .08 : parseFloat(getComputedStyle(stage).paddingLeft);
+    M = H * .9;                                                         // scroll distance of the fan-out
+    D = Math.max(0, x0 + reels.length * (cw + gap) - gap - W + (phone ? W * .08 : 42)); // scroll distance of the horizontal run
+    track.style.height = H + M + D + 'px';
+    stage.style.setProperty('--cw', cw + 'px');
+    stage.style.setProperty('--ch', ch + 'px');
+    reels.forEach((r, i) => r.style.setProperty('--z', Z[i]));
+  }
+  function ccFrame() {
+    if (cc.classList.contains('on') && !cc.classList.contains('leave')) {
+      cur += (scrollY - cur) * .14;                                       // eased scroll
+      const p = ease(Math.min(1, cur / M)), hx = Math.min(Math.max(cur - M, 0), D);
+      const phone = W < 760, cx = W * (phone ? .5 : .68), cy = H * (phone ? .64 : .5), s0 = phone ? .6 : .8;
+      reels.forEach((el, i) => {
+        const c = C[i], ax = cx + c[0] * cw - cw / 2, ay = cy + c[1] * ch * .7 - ch / 2;
+        const bx = x0 + i * (cw + gap) - hx, by = (H - ch) / 2 + (phone ? H * .1 : 0);
+        el.style.transform = `translate3d(${lerp(ax, bx, p)}px,${lerp(ay, by, p)}px,0) rotate(${lerp(c[2], 0, p)}deg) scale(${lerp(c[3] * s0, 1, p)})`;
+      });
+      ctext.style.opacity = Math.max(0, 1 - p * 1.5);
+      ctext.style.transform = `translateX(${-p * 60}px)`;
+      ctext.style.pointerEvents = p > .6 ? 'none' : '';
+      bar.style.transform = `scaleX(${M + D ? cur / (M + D) : 0})`;
+    }
+    requestAnimationFrame(ccFrame);
+  }
+  ccFrame();
+  addEventListener('resize', () => { if (cc.classList.contains('on')) ccLayout(); });
+  function openReel(r) {
+    const url = `https://www.instagram.com/reel/${r.dataset.id}/`;
+    const wrap = document.createElement('div'), f = document.createElement('iframe'), a = document.createElement('a');
+    wrap.className = 'reelbox';
+    f.src = url + 'embed/'; f.title = 'Instagram reel'; f.allow = 'autoplay; encrypted-media; fullscreen'; f.allowFullscreen = true;
+    a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open on Instagram';
+    wrap.append(f, a);
+    openLb(wrap);
+  }
+  reels.forEach(r => r.addEventListener('click', () => openReel(r)));
+
+  // deep link / refresh on a page skips the intro (runs last so everything above is initialised)
+  if (ids.includes(location.hash.slice(1))) enter(true);
+})();
+</script>
+</body>
+</html>
