@@ -15,7 +15,8 @@
   --bg:#F7F5EB;
   --ink:#000;
   --tint:rgba(0,0,0,.08);
-  --beige:#dccdb2; /* intro + About page background */
+  --beige:#dccdb2; /* intro background */
+  --yellow:#fff5c9; /* About page background: very light pastel yellow */
   --display:Inter,Helvetica,Arial,sans-serif;
   --sans:Helvetica,"Helvetica Neue",Arial,sans-serif;
   --ease:cubic-bezier(.65,0,.35,1);
@@ -30,7 +31,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{cursor:var(--cur);-webkit-text-size-adjust:100%}
 body{--pg:var(--bg);background-color:var(--pg);color:var(--ink);font:12px/1.5 var(--sans);-webkit-font-smoothing:antialiased;transition:background-color .8s var(--ease),color .8s var(--ease)}
-body.on-about{--pg:var(--beige)}
+body.on-about{--pg:var(--yellow)}
 body.on-content{--pg:#0d0d0d;color:var(--bg)}
 body.locked{overflow:hidden}
 a{color:inherit;text-decoration:none}
@@ -43,10 +44,10 @@ img{display:block;max-width:100%}
 .intro{position:fixed;inset:0;z-index:50;background:var(--beige);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;transition:opacity .5s var(--ease) .15s,visibility 0s .65s}
 .intro h1{font:700 clamp(22px,4vw,48px)/1 var(--display);letter-spacing:.04em;text-align:center;position:relative}
 .wig{display:inline-block;white-space:nowrap}
-.wig.a{filter:url(#wigA);animation:flipA 1.1s infinite}
-.wig.b{position:absolute;left:0;top:0;filter:url(#wigB);transform:rotate(.35deg) translate(1px,1px);animation:flipB 1.1s infinite}
-@keyframes flipA{0%,49.9%{opacity:1}50%,100%{opacity:0}}
-@keyframes flipB{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+.wig.a{filter:url(#wigA);animation:flipA 3.2s infinite}
+.wig.b{position:absolute;left:0;top:0;filter:url(#wigB);transform:translate(.6px,.6px);animation:flipB 3.2s infinite}
+@keyframes flipA{0%,40%{opacity:1}50%,90%{opacity:0}100%{opacity:1}}
+@keyframes flipB{0%,40%{opacity:0}50%,90%{opacity:1}100%{opacity:0}}
 @media(prefers-reduced-motion:reduce){.wig.a{filter:none;animation:none}.wig.b{display:none}}
 .type{min-height:1.5em}
 .type::after{content:"";display:inline-block;width:1px;height:1em;background:currentColor;margin-left:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
@@ -59,7 +60,7 @@ img{display:block;max-width:100%}
 .sp svg{display:block;width:100%;height:100%;fill:currentColor;overflow:visible;transform:rotate(var(--r,0deg))}
 @keyframes starIn{from{opacity:0;transform:scale(.3) rotate(-100deg)}to{opacity:1;transform:scale(1) rotate(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-.halo{position:absolute;left:0;top:0;z-index:-1;width:min(900px,170vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,.3) 30%,rgba(255,255,255,.1) 60%,rgba(255,255,255,0));opacity:0;pointer-events:none;transition:opacity .8s ease}
+.halo{position:absolute;left:0;top:0;z-index:-1;width:min(900px,170vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.34),rgba(255,255,255,.18) 30%,rgba(255,255,255,.06) 60%,rgba(255,255,255,0));opacity:0;pointer-events:none;transition:opacity .8s ease}
 .hint{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6;transition:opacity .3s ease}
 .intro.clap .hint,.intro.out .hint{opacity:0}
 /* clapperboard slate: pops in on click, clacks, then everything blurs away */
@@ -77,6 +78,13 @@ img{display:block;max-width:100%}
 .intro.out h1{opacity:0;transform:translateY(-18px) scale(1.06);filter:blur(10px)}
 .intro.out .type{opacity:0;transform:translateY(-8px);transition-delay:.05s}
 .intro.out .slate{opacity:0;transform:translate(-50%,-50%) translateY(-18px) scale(1.06);filter:blur(10px);transition:transform .55s var(--out),opacity .4s ease,filter .5s ease}
+
+/* videography: fullscreen video behind everything, with a subtle dark overlay so white text stays readable */
+.vbg,.vshade{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:0;transition:opacity .8s ease}
+.vbg{object-fit:cover}
+.vshade{background:rgba(0,0,0,.42)}
+body.on-videography .vbg,body.on-videography .vshade{opacity:1}
+body.on-videography{--pg:#0d0d0d;color:#fff}
 
 /* shell: links down the left, name bottom-left */
 .site{opacity:0;transition:opacity .6s ease .15s}
@@ -147,20 +155,20 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 
 /* about: text runs across the screen; the cut-out on the right swings slowly between pointing up and pointing down */
 #about{padding:0 42px 0 clamp(150px,16vw,260px)}
-.about{--cut:clamp(150px,19vw,300px);--t1:-20deg;--t2:-38deg;position:relative;min-height:calc(100vh - 110px);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
-.atext{position:relative;z-index:1;display:flex;flex-direction:column;min-height:calc(100vh - 110px);width:calc(100% - var(--cut) - 24px);padding:clamp(28px,8vh,96px) 0 clamp(40px,10vh,120px)}
+.about{--cut:clamp(150px,19vw,300px);--t1:-16deg;display:flex;align-items:center;gap:clamp(24px,8vw,130px);min-height:calc(100vh - 110px);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
+.atext{position:relative;z-index:1;flex:1;min-width:0}
 .about .big{font-size:clamp(36px,5.6vw,84px);font-weight:700;line-height:.95;letter-spacing:-.04em}
 .about .quote{font-size:clamp(14px,1.3vw,18px);line-height:1.4;font-style:italic;max-width:30em;margin-top:clamp(14px,2.4vh,24px)}
-.arow{margin-top:auto;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr) minmax(0,1.2fr);gap:clamp(24px,4vw,64px);padding-top:clamp(40px,8vh,96px)}
+.arow{margin-top:clamp(36px,7vh,80px);display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr) minmax(0,1.2fr);gap:clamp(24px,4vw,64px)}
 .about h3{font-size:10.5px;line-height:1;font-weight:400;letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:12px}
 .about p,.about .contact a{font-size:clamp(14px,1.15vw,16.5px);line-height:1.5;letter-spacing:-.005em}
 .about .bio p+p{margin-top:.8em}
 .about .contact p{margin-bottom:.9em}
 .about .contact a{display:block;width:max-content;max-width:100%;overflow-wrap:anywhere;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em}
 .about .contact a+a{margin-top:.3em}
-.cutout{position:absolute;right:0;bottom:0;width:var(--cut);pointer-events:none}
-.cutout img{display:block;width:100%;height:auto;transform-origin:50% 90%;animation:pose 6s steps(1,end) infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.22))}
-@keyframes pose{0%{transform:rotate(0)}25%{transform:rotate(var(--t1))}50%{transform:rotate(var(--t2))}75%{transform:rotate(var(--t1))}}
+.cutout{flex:none;width:var(--cut);pointer-events:none}
+.cutout img{display:block;width:100%;height:auto;transform-origin:50% 90%;animation:pose 2s steps(1,end) infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.22))}
+@keyframes pose{0%{transform:rotate(0)}50%{transform:rotate(var(--t1))}}
 
 /* lightbox (photos + video player) */
 .lb{position:fixed;inset:0;z-index:100;display:none;background:rgba(0,0,0,.94);color:#fff;padding:56px 16px 24px}
@@ -179,8 +187,8 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 .lb .nav[hidden]{display:none}
 .lb .prev{left:4px}
 .lb .next{right:4px}
-.reelbox{display:flex;flex-direction:column;align-items:center}
-.reelbox iframe{width:min(94vw,520px);height:min(84vh,920px);aspect-ratio:auto;background:#fff;border-radius:6px}
+.reelbox{display:flex;flex-direction:column;align-items:center;width:min(94vw,540px);max-height:100%;overflow:auto}
+.reelbox iframe{max-width:100%}
 .reelbox a{margin-top:10px;font-size:12px;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px}
 
 @media(max-width:760px){
@@ -196,27 +204,30 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   .cc-bar{left:14px;bottom:44px}
   .side{white-space:nowrap;overflow-x:auto;scrollbar-width:none}
   .gallery,.gcol{gap:8px}
-  .about{--cut:min(42vw,180px);display:flex;flex-direction:column;min-height:0}
+  .about{--cut:min(42vw,180px);display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0}
   .atext{width:100%;min-height:0;padding:12px 0 0}
   .about .big{font-size:15vw}
-  .arow{grid-template-columns:1fr;gap:28px;padding-top:36px}
+  .arow{grid-template-columns:1fr;gap:28px;margin-top:0;padding-top:36px}
   .cutout{position:relative;align-self:flex-end;margin-top:28px}
 }
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-delay:0s!important;animation-delay:0s!important}}
 </style>
 </head>
 <body class="locked">
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wigA" x="-8%" y="-30%" width="116%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".035 .11" numOctaves="2" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="wigB" x="-8%" y="-30%" width="116%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".035 .11" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wigA" x="-8%" y="-30%" width="116%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".03 .09" numOctaves="2" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="wigB" x="-8%" y="-30%" width="116%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".03 .09" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
 
 <!-- INTRO -->
 <div class="intro" role="button" tabindex="0" aria-label="Enter site">
 <div class="stars" aria-hidden="true">
     <svg width="0" height="0" style="position:absolute"><defs><polygon id="starshape" points="0.0,-50.0 12.6,-17.4 47.6,-15.5 20.4,6.6 29.4,40.5 0.0,21.5 -29.4,40.5 -20.4,6.6 -47.6,-15.5 -12.6,-17.4"/></defs></svg>
-    <span class="star" style="--x:80%;--y:13%;--s:20;--b:0;--t:110s;--dir:normal;--r:10deg;--d:0.1s;color:#6DC9D3"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
-    <span class="star" style="--x:20%;--y:80%;--s:27;--b:0;--t:130s;--dir:reverse;--r:-18deg;--d:0.5s;color:#E1BE5E"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
-    <span class="star" style="--x:31%;--y:27%;--s:14;--b:3.5;--t:90s;--dir:normal;--r:30deg;--d:0.9s;color:#A8D5A2"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
-    <span class="star" style="--x:73%;--y:80%;--s:9.5;--b:3;--t:70s;--dir:reverse;--r:8deg;--d:1.3s;color:#F2A6AC"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
-    <span class="star" style="--x:38%;--y:94%;--s:6;--b:5;--t:60s;--dir:normal;--r:40deg;--d:1.7s;color:#6DC9D3"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:82%;--y:14%;--s:20;--b:2;--t:110s;--dir:normal;--r:10deg;--d:0.1s;color:#6DC9D3"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:18%;--y:82%;--s:27;--b:2;--t:130s;--dir:reverse;--r:-18deg;--d:0.5s;color:#E1BE5E"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:17%;--y:20%;--s:14;--b:3.5;--t:90s;--dir:normal;--r:30deg;--d:0.9s;color:#A8D5A2"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:77%;--y:84%;--s:12;--b:3;--t:70s;--dir:reverse;--r:8deg;--d:1.3s;color:#F2A6AC"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:49%;--y:5%;--s:7;--b:5;--t:60s;--dir:normal;--r:22deg;--d:1.7s;color:#E1BE5E"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:51%;--y:96%;--s:6;--b:5;--t:65s;--dir:reverse;--r:40deg;--d:2.0s;color:#6DC9D3"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:6%;--y:50%;--s:8;--b:4;--t:75s;--dir:normal;--r:-12deg;--d:2.3s;color:#F2A6AC"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
+    <span class="star" style="--x:95%;--y:50%;--s:9;--b:3.5;--t:85s;--dir:reverse;--r:18deg;--d:2.6s;color:#A8D5A2"><span class="sp"><svg viewBox="-50 -50 100 100"><use href="#starshape"/></svg></span></span>
   </div>
   <div class="halo"></div>
   <p class="hint">tap to continue</p>
@@ -233,6 +244,10 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     </g>
   </svg>
 </div>
+
+<!-- fullscreen background for the Videography page: put your clip at assets/background.mp4 -->
+<video class="vbg" src="assets/background.mp4" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video>
+<div class="vshade" aria-hidden="true"></div>
 
 <div class="site">
   <nav class="side">
@@ -337,7 +352,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
             </div>
           </div>
         </div>
-        <!-- cut-out of the photo with a white paper edge; slow stop-motion: normal, tilted down, tilted further down (change --t1 / --t2 on .about to adjust) -->
+        <!-- cut-out of the photo with a white paper edge; two-frame stop-motion: regular, then tilted a bit down (change --t1 on .about to adjust the tilt) -->
         <div class="cutout rv" aria-hidden="true"><img src="assets/about-cutout.webp" alt=""></div>
       </div>
     </section>
@@ -360,6 +375,9 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const body = document.body, intro = $('.intro'), site = $('.site'), views = $$('.view'), links = $$('.side a');
   const ids = views.map(v => v.id);
+  const vbg = $('.vbg');
+  const vbgPlay = on => { if (on) { const p = vbg.play(); if (p) p.catch(() => {}); } else vbg.pause(); };
+  vbgPlay(false);   // only plays while the Videography page is open
 
   /* stagger index for the reveal animation */
   views.forEach(v => $$('.row,.ph,.about .rv,.ccl,.reel', v).forEach((el, i) => el.style.setProperty('--i', Math.min(i, 10))));
@@ -371,6 +389,8 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     links.forEach(a => a.classList.toggle('active', a.dataset.v === id));
     body.classList.toggle('on-about', id === 'about');
     body.classList.toggle('on-content', id === 'content');
+    body.classList.toggle('on-videography', id === 'videography');
+    vbgPlay(id === 'videography');
     const next = $('#' + id), prev = $('.view.on'), t = ++token;
     if (prev === next) { prev.classList.remove('leave'); return; }
     const swap = () => {
@@ -451,7 +471,8 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     intro.classList.remove('out', 'clap');
     busy = false;
     body.classList.add('locked');
-    body.classList.remove('on-about', 'on-content');
+    body.classList.remove('on-about', 'on-content', 'on-videography');
+    vbgPlay(false);
     site.classList.remove('on');
     try { history.replaceState(null, '', location.pathname + location.search); } catch (err) {}
     clearTimeout(timer); w = 0; c = 0; del = false; typeEl.textContent = ''; tick(); popStars();
@@ -560,16 +581,17 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   /* content creation: a collage of reels that fans out into a horizontal row as you scroll */
   const cc = $('#content'), track = $('.cc-track'), stage = $('.cc-stage'), ctext = $('.cc-text'), reels = $$('.reel'), bar = $('.cc-bar i');
   // [x, y, rotation, scale] of each reel in the collage (x/y in card widths/heights from the collage centre); the last six wait off-screen
-  const C = [[-.55, -.5, -9, .9], [.55, -.55, 7, 1], [0, .1, -3, 1.05], [.85, .25, 10, .95], [-.7, .6, 6, .85], [.25, .75, -7, .9],
+  const C = [[-.4, -.5, -9, .9], [.55, -.55, 7, 1], [0, .1, -3, 1.05], [.85, .25, 10, .95], [-.5, .6, 6, .85], [.25, .75, -7, .9],
              [1.9, -.3, 8, .9], [2.2, .3, -6, .9], [2.5, -.1, 5, .9], [2.8, .35, -8, .9], [3.1, -.2, 6, .9], [3.4, .2, -5, .9]];
   const Z = [3, 5, 6, 4, 2, 1, 7, 8, 9, 10, 11, 12];
-  let W, H, cw, ch, gap, x0, M, D, cur = 0;
+  let W, H, cw, ch, gap, x0, M, D, cxDesk, cur = 0;
   const lerp = (a, b, t) => a + (b - a) * t, ease = t => 1 - Math.pow(1 - t, 3);
   function ccLayout() {
     W = stage.clientWidth; H = stage.clientHeight;
     const phone = W < 760;
     ch = Math.min(H * (phone ? .5 : .58), 560); cw = ch * 9 / 16; gap = cw * .14;
     x0 = phone ? W * .08 : parseFloat(getComputedStyle(stage).paddingLeft);
+    cxDesk = Math.max(W * .75, ctext.offsetLeft + ctext.offsetWidth + cw * .85 + 28);   // collage centre: right of the text with a gap
     M = H * .9;                                                         // scroll distance of the fan-out
     D = Math.max(0, x0 + reels.length * (cw + gap) - gap - W + (phone ? W * .08 : 42)); // scroll distance of the horizontal run
     track.style.height = H + M + D + 'px';
@@ -581,7 +603,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     if (cc.classList.contains('on') && !cc.classList.contains('leave')) {
       cur += (scrollY - cur) * .14;                                       // eased scroll
       const p = ease(Math.min(1, cur / M)), hx = Math.min(Math.max(cur - M, 0), D);
-      const phone = W < 760, cx = W * (phone ? .5 : .8), cy = H * (phone ? .64 : .5), s0 = phone ? .6 : .74;
+      const phone = W < 760, cx = phone ? W * .5 : cxDesk, cy = H * (phone ? .64 : .5), s0 = phone ? .6 : .74;
       reels.forEach((el, i) => {
         const c = C[i], ax = cx + c[0] * cw - cw / 2, ay = cy + c[1] * ch * .7 - ch / 2;
         const bx = x0 + i * (cw + gap) - hx, by = (H - ch) / 2 + (phone ? H * .1 : 0);
@@ -596,14 +618,23 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   }
   ccFrame();
   addEventListener('resize', () => { if (cc.classList.contains('on')) ccLayout(); });
+  let ig;
+  const loadIG = () => ig || (ig = new Promise((res, rej) => {
+    if (window.instgrm) return res();
+    const s = document.createElement('script');
+    s.src = 'https://www.instagram.com/embed.js'; s.async = true; s.onload = res; s.onerror = rej;
+    document.head.append(s);
+  }));
   function openReel(r) {
     const url = `https://www.instagram.com/reel/${r.dataset.id}/`;
-    const wrap = document.createElement('div'), f = document.createElement('iframe'), a = document.createElement('a');
+    if (location.protocol === 'file:') { window.open(url, '_blank', 'noopener'); return; }  // Instagram only embeds on hosted pages
+    const wrap = document.createElement('div'), a = document.createElement('a');
     wrap.className = 'reelbox';
-    f.src = url + 'embed/'; f.title = 'Instagram reel'; f.allow = 'autoplay; encrypted-media; fullscreen'; f.allowFullscreen = true;
+    wrap.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${url}?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#fff;border:0;border-radius:6px;margin:0;max-width:540px;min-width:326px;width:100%"></blockquote>`;
     a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open on Instagram';
-    wrap.append(f, a);
+    wrap.append(a);
     openLb(wrap);
+    loadIG().then(() => window.instgrm && instgrm.Embeds.process()).catch(() => {});
   }
   reels.forEach(r => r.addEventListener('click', () => openReel(r)));
 
