@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Sean Trisnadi</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-52 -52 104 104'%3E%3Cpolygon fill='%23F4C84A' points='0.0,-50.0 12.6,-17.4 47.6,-15.5 20.4,6.6 29.4,40.5 0.0,21.5 -29.4,40.5 -20.4,6.6 -47.6,-15.5 -12.6,-17.4'/%3E%3C/svg%3E">
 <meta name="description" content="Sean Trisnadi, videographer and photographer based in Los Angeles + Seattle.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +30,9 @@
   --cur-p:var(--img) 4 2,pointer;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{cursor:var(--cur);-webkit-text-size-adjust:100%}
+html{cursor:var(--cur);-webkit-text-size-adjust:100%;overflow-x:hidden}
+html.hide-sb{scrollbar-width:none}
+html.hide-sb::-webkit-scrollbar{display:none}
 body{--pg:var(--bg);background-color:var(--pg);color:var(--ink);font:12px/1.5 var(--sans);-webkit-font-smoothing:antialiased;transition:background-color .8s var(--ease),color .8s var(--ease)}
 body.on-about{--pg:var(--yellow)}
 body.on-content{--pg:#0d0d0d;color:var(--bg)}
@@ -43,12 +46,6 @@ img{display:block;max-width:100%}
 /* intro */
 .intro{position:fixed;inset:0;z-index:50;background:var(--beige);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;transition:opacity .5s var(--ease) .15s,visibility 0s .65s}
 .intro h1{font:700 clamp(22px,4vw,48px)/1 var(--display);letter-spacing:.04em;text-align:center;position:relative}
-.wig{display:inline-block;white-space:nowrap}
-.wig.a{filter:url(#wigA);animation:flipA 3.2s infinite}
-.wig.b{position:absolute;left:0;top:0;filter:url(#wigB);transform:translate(.6px,.6px);animation:flipB 3.2s infinite}
-@keyframes flipA{0%,40%{opacity:1}50%,90%{opacity:0}100%{opacity:1}}
-@keyframes flipB{0%,40%{opacity:0}50%,90%{opacity:1}100%{opacity:0}}
-@media(prefers-reduced-motion:reduce){.wig.a{filter:none;animation:none}.wig.b{display:none}}
 .type{min-height:1.5em}
 .type::after{content:"";display:inline-block;width:1px;height:1em;background:currentColor;margin-left:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
 .intro h1,.type{transition:transform .55s var(--out),opacity .35s ease,filter .5s ease}
@@ -79,11 +76,17 @@ img{display:block;max-width:100%}
 .intro.out .type{opacity:0;transform:translateY(-8px);transition-delay:.05s}
 .intro.out .slate{opacity:0;transform:translate(-50%,-50%) translateY(-18px) scale(1.06);filter:blur(10px);transition:transform .55s var(--out),opacity .4s ease,filter .5s ease}
 
+/* soft fading trail behind the cursor (white + difference blend, so it reads on light and dark pages) */
+#trail{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:200;mix-blend-mode:difference}
+
 /* videography: fullscreen video behind everything, with a subtle dark overlay so white text stays readable */
 .vbg,.vshade{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:0;transition:opacity .8s ease}
 .vbg{object-fit:cover}
 .vshade{background:rgba(0,0,0,.42)}
 body.on-videography .vbg,body.on-videography .vshade{opacity:1}
+.vbar{position:fixed;right:26px;top:50%;width:2px;height:33vh;margin-top:-16.5vh;z-index:20;background:rgba(255,255,255,.25);pointer-events:none;opacity:0;transition:opacity .6s ease}
+.vbar i{display:block;width:100%;height:100%;background:#fff;transform-origin:top;transform:scaleY(0)}
+body.on-videography .vbar{opacity:1}
 body.on-videography{--pg:#0d0d0d;color:#fff}
 
 /* shell: links down the left, name bottom-left */
@@ -119,7 +122,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 /* videography: text list */
 .list{list-style:none}
 .row+.row{margin-top:clamp(14px,3.4vh,40px)}
-.it{font:400 clamp(18px,2vw,30px)/1.25 var(--sans);text-transform:uppercase;letter-spacing:-.01em;padding:.45em 0;opacity:.38;filter:blur(1.2px);transform-origin:0 50%;transition:opacity .4s ease,filter .4s ease,transform .55s var(--spring)}
+.it{font:400 clamp(18px,2vw,30px)/1.25 var(--sans);text-transform:uppercase;letter-spacing:-.01em;padding:.45em 0;opacity:.72;filter:blur(.5px);transform-origin:0 50%;transition:opacity .4s ease,filter .4s ease,transform .55s var(--spring)}
 .it:hover,.it:focus-visible{opacity:1;filter:none;transform:scale(1.12)}
 @media(hover:none){.it{opacity:.85;filter:none}}
 
@@ -187,7 +190,8 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 .lb .nav[hidden]{display:none}
 .lb .prev{left:4px}
 .lb .next{right:4px}
-.reelbox{display:flex;flex-direction:column;align-items:center;width:min(94vw,540px);max-height:100%;overflow:auto}
+.reelbox{display:flex;flex-direction:column;align-items:center;width:min(94vw,360px)}
+.rb-in{width:100%;transform-origin:top center}
 .reelbox iframe{max-width:100%}
 .reelbox a{margin-top:10px;font-size:12px;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px}
 
@@ -214,7 +218,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 </style>
 </head>
 <body class="locked">
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wigA" x="-8%" y="-30%" width="116%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".03 .09" numOctaves="2" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="wigB" x="-8%" y="-30%" width="116%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".03 .09" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<canvas id="trail" aria-hidden="true"></canvas>
 
 <!-- INTRO -->
 <div class="intro" role="button" tabindex="0" aria-label="Enter site">
@@ -231,7 +235,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   </div>
   <div class="halo"></div>
   <p class="hint">tap to continue</p>
-  <h1><span class="wig a">Sean Trisnadi</span><span class="wig b" aria-hidden="true">Sean Trisnadi</span></h1>
+  <h1>Sean Trisnadi</h1>
   <p class="type"></p>
   <svg class="slate" viewBox="0 0 200 170" aria-hidden="true" fill="#000" stroke-linejoin="round">
     <defs><g id="st" fill="#fff"><polygon points="24,36 40,36 30,56 14,56"/><polygon points="54,36 70,36 60,56 44,56"/><polygon points="84,36 100,36 90,56 74,56"/><polygon points="114,36 130,36 120,56 104,56"/><polygon points="144,36 160,36 150,56 134,56"/><polygon points="174,36 190,36 180,56 164,56"/></g></defs>
@@ -248,6 +252,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 <!-- fullscreen background for the Videography page: put your clip at assets/background.mp4 -->
 <video class="vbg" src="assets/background.mp4" autoplay loop muted playsinline preload="auto" aria-hidden="true"></video>
 <div class="vshade" aria-hidden="true"></div>
+<div class="vbar" aria-hidden="true"><i></i></div>
 
 <div class="site">
   <nav class="side">
@@ -378,6 +383,10 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   const vbg = $('.vbg');
   const vbgPlay = on => { if (on) { const p = vbg.play(); if (p) p.catch(() => {}); } else vbg.pause(); };
   vbgPlay(false);   // only plays while the Videography page is open
+  const vbarFill = $('.vbar i');
+  const vbarUpdate = () => { const max = document.documentElement.scrollHeight - innerHeight; vbarFill.style.transform = `scaleY(${max > 0 ? Math.min(1, scrollY / max) : 0})`; };
+  addEventListener('scroll', vbarUpdate, { passive: true });
+  addEventListener('resize', vbarUpdate);
 
   /* stagger index for the reveal animation */
   views.forEach(v => $$('.row,.ph,.about .rv,.ccl,.reel', v).forEach((el, i) => el.style.setProperty('--i', Math.min(i, 10))));
@@ -391,6 +400,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     body.classList.toggle('on-content', id === 'content');
     body.classList.toggle('on-videography', id === 'videography');
     vbgPlay(id === 'videography');
+    document.documentElement.classList.toggle('hide-sb', id === 'videography');
     const next = $('#' + id), prev = $('.view.on'), t = ++token;
     if (prev === next) { prev.classList.remove('leave'); return; }
     const swap = () => {
@@ -398,6 +408,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
       views.forEach(v => v.classList.remove('on', 'leave'));
       next.classList.add('on');
       scrollTo(0, 0);
+      vbarUpdate();
       if (id === 'content') { ccLayout(); cur = 0; }
     };
     if (prev && !first) { prev.classList.add('leave'); setTimeout(swap, 320); } else swap();
@@ -473,6 +484,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     body.classList.add('locked');
     body.classList.remove('on-about', 'on-content', 'on-videography');
     vbgPlay(false);
+    document.documentElement.classList.remove('hide-sb');
     site.classList.remove('on');
     try { history.replaceState(null, '', location.pathname + location.search); } catch (err) {}
     clearTimeout(timer); w = 0; c = 0; del = false; typeEl.textContent = ''; tick(); popStars();
@@ -502,6 +514,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     box.replaceChildren();
     body.classList.remove('locked');
     gi = -1;
+    if (reelRO) { reelRO.disconnect(); reelRO = null; }
   }
   function openPhoto(i) {
     gi = (i + photos.length) % photos.length;
@@ -584,14 +597,17 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   const C = [[-.4, -.5, -9, .9], [.55, -.55, 7, 1], [0, .1, -3, 1.05], [.85, .25, 10, .95], [-.5, .6, 6, .85], [.25, .75, -7, .9],
              [1.9, -.3, 8, .9], [2.2, .3, -6, .9], [2.5, -.1, 5, .9], [2.8, .35, -8, .9], [3.1, -.2, 6, .9], [3.4, .2, -5, .9]];
   const Z = [3, 5, 6, 4, 2, 1, 7, 8, 9, 10, 11, 12];
-  let W, H, cw, ch, gap, x0, M, D, cxDesk, cur = 0;
+  let W, H, cw, ch, gap, x0, M, D, cxDesk, cyP, s0p, cur = 0;
   const lerp = (a, b, t) => a + (b - a) * t, ease = t => 1 - Math.pow(1 - t, 3);
   function ccLayout() {
     W = stage.clientWidth; H = stage.clientHeight;
     const phone = W < 760;
     ch = Math.min(H * (phone ? .5 : .58), 560); cw = ch * 9 / 16; gap = cw * .14;
     x0 = phone ? W * .08 : parseFloat(getComputedStyle(stage).paddingLeft);
-    cxDesk = Math.max(W * .75, ctext.offsetLeft + ctext.offsetWidth + cw * .85 + 28);   // collage centre: right of the text with a gap
+    cxDesk = Math.max(W * .75, ctext.offsetLeft + ctext.offsetWidth + cw * .85 + 28);
+    const tb = ctext.offsetTop + ctext.offsetHeight, avail = Math.max(60, H - tb - 40);   // phones: room left under the text
+    s0p = Math.max(.25, Math.min(.6, avail / ch - .42));
+    cyP = tb + 24 + avail / 2;   // collage centre: right of the text with a gap
     M = H * .9;                                                         // scroll distance of the fan-out
     D = Math.max(0, x0 + reels.length * (cw + gap) - gap - W + (phone ? W * .08 : 42)); // scroll distance of the horizontal run
     track.style.height = H + M + D + 'px';
@@ -603,9 +619,9 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     if (cc.classList.contains('on') && !cc.classList.contains('leave')) {
       cur += (scrollY - cur) * .14;                                       // eased scroll
       const p = ease(Math.min(1, cur / M)), hx = Math.min(Math.max(cur - M, 0), D);
-      const phone = W < 760, cx = phone ? W * .5 : cxDesk, cy = H * (phone ? .64 : .5), s0 = phone ? .6 : .74;
+      const phone = W < 760, cx = phone ? W * .5 : cxDesk, cy = phone ? cyP : H * .5, s0 = phone ? s0p : .74;
       reels.forEach((el, i) => {
-        const c = C[i], ax = cx + c[0] * cw - cw / 2, ay = cy + c[1] * ch * .7 - ch / 2;
+        const c = C[i], ax = cx + c[0] * cw - cw / 2, ay = cy + c[1] * ch * (phone ? .32 : .7) - ch / 2;
         const bx = x0 + i * (cw + gap) - hx, by = (H - ch) / 2 + (phone ? H * .1 : 0);
         el.style.transform = `translate3d(${lerp(ax, bx, p)}px,${lerp(ay, by, p)}px,0) rotate(${lerp(c[2], 0, p)}deg) scale(${lerp(c[3] * s0, 1, p)})`;
       });
@@ -625,18 +641,51 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     s.src = 'https://www.instagram.com/embed.js'; s.async = true; s.onload = res; s.onerror = rej;
     document.head.append(s);
   }));
+  let reelRO;
   function openReel(r) {
     const url = `https://www.instagram.com/reel/${r.dataset.id}/`;
     if (location.protocol === 'file:') { window.open(url, '_blank', 'noopener'); return; }  // Instagram only embeds on hosted pages
-    const wrap = document.createElement('div'), a = document.createElement('a');
-    wrap.className = 'reelbox';
-    wrap.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${url}?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#fff;border:0;border-radius:6px;margin:0;max-width:540px;min-width:326px;width:100%"></blockquote>`;
+    const wrap = document.createElement('div'), inner = document.createElement('div'), a = document.createElement('a');
+    wrap.className = 'reelbox'; inner.className = 'rb-in';
+    inner.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${url}?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#fff;border:0;border-radius:6px;margin:0;max-width:360px;min-width:326px;width:100%"></blockquote>`;
     a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open on Instagram';
-    wrap.append(a);
+    wrap.append(inner, a);
     openLb(wrap);
+    // Instagram's player is taller than most screens, so scale it down until the whole reel fits
+    const fit = () => {
+      const h = inner.offsetHeight || 1, k = Math.min(1, (box.clientHeight - 56) / h);
+      inner.style.transform = `scale(${k})`;
+      inner.style.marginBottom = (h * k - h) + 'px';
+    };
+    if (reelRO) reelRO.disconnect();
+    reelRO = new ResizeObserver(fit);
+    reelRO.observe(inner);
+    reelRO.observe(box);
     loadIG().then(() => window.instgrm && instgrm.Embeds.process()).catch(() => {});
   }
   reels.forEach(r => r.addEventListener('click', () => openReel(r)));
+
+  /* cursor trail */
+  const cv = $('#trail'), tc = cv.getContext('2d'), trail = [];
+  if (matchMedia('(hover:hover) and (pointer:fine)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
+    const sizeCv = () => { const d = Math.min(2, devicePixelRatio || 1); cv.width = innerWidth * d; cv.height = innerHeight * d; tc.setTransform(d, 0, 0, d, 0, 0); };
+    sizeCv();
+    addEventListener('resize', sizeCv);
+    addEventListener('pointermove', e => { if (e.pointerType === 'mouse') trail.push({ x: e.clientX, y: e.clientY, t: performance.now() }); }, { passive: true });
+    const LIFE = 480;
+    (function draw(now) {
+      while (trail.length && now - trail[0].t > LIFE) trail.shift();
+      tc.clearRect(0, 0, innerWidth, innerHeight);
+      tc.lineCap = 'round';
+      for (let i = 1; i < trail.length; i++) {
+        const a = 1 - (now - trail[i].t) / LIFE;                  // 1 at the cursor, 0 at the tail
+        tc.strokeStyle = `rgba(255,255,255,${(a * .55).toFixed(3)})`;
+        tc.lineWidth = 2 + 9 * a;
+        tc.beginPath(); tc.moveTo(trail[i - 1].x, trail[i - 1].y); tc.lineTo(trail[i].x, trail[i].y); tc.stroke();
+      }
+      requestAnimationFrame(draw);
+    })(performance.now());
+  }
 
   // deep link / refresh on a page skips the intro (runs last so everything above is initialised)
   if (ids.includes(location.hash.slice(1))) enter(true);
