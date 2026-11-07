@@ -88,9 +88,7 @@ body.on-videography .vbar{opacity:1}
 /* photography: red swirly lines behind the collage, very slightly blurred */
 .pbg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:0;filter:blur(1.1px);transition:opacity .8s ease}
 body.on-photography .pbg{opacity:1}
-.pbg path{stroke-dasharray:1;stroke-dashoffset:0}
-body.on-photography .pbg path{animation:draw 3.4s cubic-bezier(.4,0,.2,1) var(--d,0s) both}
-@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.pbg path{stroke-dasharray:1;stroke-dashoffset:1}
 body.on-videography{--pg:#0d0d0d;color:#fff}
 
 /* shell: links down the left, name bottom-left */
@@ -183,8 +181,8 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 .lb-box{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 .lb.on .lb-box>*{animation:lbin .5s var(--out)}
 @keyframes lbin{from{opacity:0;transform:scale(.86)}}
-.lb img{max-width:100%;max-height:100%;object-fit:contain;touch-action:none;user-select:none;-webkit-user-drag:none}
-.lb iframe{display:block;width:100%;height:auto;aspect-ratio:16/9;border:0;background:#000}
+.lb img{max-width:100%;max-height:100%;object-fit:contain}
+.player iframe{display:block;width:100%;height:auto;aspect-ratio:16/9;border:0;background:#000}
 .player{width:min(100%,1400px,calc((100vh - 130px)*1.7778))}
 .player p,.player a{display:block;margin-top:10px;font-size:12px;text-transform:uppercase;text-align:right}
 .player a{text-decoration:underline;text-underline-offset:3px}
@@ -194,10 +192,6 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 .lb .nav[hidden]{display:none}
 .lb .prev{left:4px}
 .lb .next{right:4px}
-.lb .zoomctl{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:8px}
-.lb .zoomctl[hidden]{display:none}
-.lb .zb{width:38px;height:38px;border:1px solid rgba(255,255,255,.4);border-radius:50%;background:rgba(0,0,0,.4);text-align:center;font:300 22px/36px var(--sans);opacity:.8}
-.lb .zb:hover{opacity:1}
 .reelbox{display:flex;flex-direction:column;align-items:center;width:min(94vw,360px)}
 .rb-in{width:100%;transform-origin:top center}
 .reelbox iframe{max-width:100%}
@@ -261,18 +255,8 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
 <div class="vshade" aria-hidden="true"></div>
 <div class="vbar" aria-hidden="true"><i></i></div>
 
-<!-- Photography page background: random red swirly lines that draw themselves in -->
-<svg class="pbg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path pathLength="1" d="M-160 183C-150 177 -120 154 -100 148C-80 142 -60 142 -40 146C-20 150 0 161 20 172C40 184 67 204 80 213C93 221 91 220 96 224C101 227 107 231 112 234C117 237 123 240 128 243C133 246 139 248 144 251C149 253 155 255 160 257C165 259 171 261 176 262C181 264 186 265 192 265C198 266 202 267 209 267C216 267 224 268 233 267C242 266 252 265 263 262C273 259 285 255 296 249C307 243 318 235 327 226C336 217 345 206 350 194C356 183 359 170 359 159C359 149 356 137 352 130C349 123 341 118 336 116C330 115 323 117 319 121C315 125 312 134 313 142C313 150 316 160 322 169C327 178 336 187 345 195C354 202 366 209 376 214C387 219 399 222 410 225C420 228 431 229 439 231C448 233 456 234 463 235C470 237 475 239 480 241C485 243 491 245 496 247C501 250 507 252 512 255C517 257 523 260 528 263C533 266 539 269 544 272C549 275 555 278 560 281C565 284 571 287 576 290C581 292 587 295 592 298C597 300 603 303 608 305C613 307 611 309 624 311C637 313 664 321 684 318C704 315 724 306 744 293C764 280 784 259 804 238C824 217 851 182 864 167C877 152 875 154 880 147C885 141 891 135 896 129C901 123 907 117 912 111C917 105 923 99 928 94C933 89 939 84 944 79C949 74 955 70 960 66C965 61 971 57 976 54C981 50 987 47 992 44C997 41 1002 39 1008 37C1014 34 1021 33 1030 31C1038 28 1048 27 1058 24C1069 21 1080 17 1091 12C1102 7 1113 1 1122 -7C1131 -15 1140 -25 1145 -34C1149 -43 1152 -54 1152 -62C1151 -70 1147 -78 1143 -82C1139 -85 1131 -86 1126 -84C1121 -81 1115 -75 1113 -67C1110 -59 1110 -48 1113 -38C1116 -28 1122 -17 1130 -8C1137 0 1148 8 1158 14C1169 20 1181 23 1191 25C1202 28 1213 28 1222 28C1231 28 1240 26 1247 25C1254 24 1258 22 1264 20C1270 18 1275 16 1280 14C1285 11 1291 9 1296 6C1301 4 1307 1 1312 -2C1317 -5 1323 -8 1328 -11C1333 -14 1339 -17 1344 -21C1349 -24 1355 -27 1360 -30C1365 -34 1371 -37 1376 -40C1381 -43 1387 -46 1392 -49C1397 -52 1395 -53 1408 -58C1421 -62 1448 -75 1468 -77C1488 -79 1508 -77 1528 -69C1548 -62 1568 -48 1588 -33C1608 -18 1628 2 1648 20C1668 38 1698 63 1708 72" stroke="#D93025" stroke-width="3.4" opacity="0.55" style="--d:0.0s"/>
-    <path pathLength="1" d="M-160 475C-150 477 -120 483 -100 486C-80 489 -60 492 -40 493C-20 495 0 497 20 497C40 498 67 496 80 496C93 495 91 494 96 494C101 493 107 492 112 491C117 490 123 489 128 488C133 487 139 485 144 484C149 482 155 480 160 479C165 477 171 475 176 472C181 470 187 468 192 465C197 463 203 460 208 457C213 454 218 451 224 448C230 445 236 441 243 437C251 434 260 430 269 425C278 420 289 415 299 408C309 401 321 393 331 383C341 373 351 362 359 350C367 338 374 323 379 310C383 296 385 281 385 269C385 256 382 243 379 234C376 225 370 218 365 213C361 209 355 208 352 209C349 209 347 213 348 217C349 221 352 227 357 232C362 237 370 242 379 245C387 249 398 252 408 253C418 255 430 255 440 255C450 254 460 253 469 251C478 250 487 248 494 247C501 245 506 244 512 243C518 242 523 241 528 241C533 241 539 241 544 241C549 241 555 242 560 243C565 244 571 245 576 247C581 249 587 251 592 253C597 255 603 258 608 261C613 263 619 267 624 270C629 273 635 277 640 281C645 284 651 288 656 293C661 297 659 295 672 305C685 316 712 341 732 358C752 375 772 393 792 406C812 419 832 431 852 436C872 442 892 443 912 440C932 437 952 428 972 417C992 405 1012 389 1032 373C1052 356 1072 336 1092 319C1112 301 1132 282 1152 266C1172 251 1192 236 1212 224C1232 213 1252 204 1272 198C1292 191 1312 187 1332 185C1352 183 1372 183 1392 183C1412 184 1432 186 1452 188C1472 190 1492 193 1512 196C1532 199 1552 203 1572 207C1592 211 1612 216 1632 222C1652 228 1672 235 1692 242C1712 249 1742 260 1752 264" stroke="#E8554E" stroke-width="1.6" opacity="0.5" style="--d:0.35s"/>
-    <path pathLength="1" d="M-160 438C-150 436 -120 421 -100 423C-80 425 -60 441 -40 450C-20 460 0 475 20 482C40 488 60 490 80 489C100 489 120 481 140 480C160 480 180 478 200 488C220 497 240 515 260 537C280 559 300 593 320 619C340 644 360 675 380 689C400 703 420 710 440 704C460 698 480 675 500 652C520 629 547 583 560 565C573 547 571 549 576 542C581 535 587 528 592 521C597 515 603 508 608 503C613 497 619 492 624 487C629 482 635 478 640 474C645 471 651 468 656 465C661 463 667 461 672 459C677 457 683 456 688 455C693 454 698 454 704 453C710 453 717 453 724 452C732 452 741 452 751 451C760 449 771 448 781 445C792 441 803 437 813 431C823 425 834 417 842 408C849 399 857 388 861 377C865 366 867 354 867 343C867 333 864 322 861 314C857 306 851 300 846 297C841 293 835 293 832 294C829 294 827 298 827 302C827 306 830 312 835 317C840 322 847 327 856 331C864 334 874 337 885 339C895 341 906 342 916 342C927 343 937 342 947 342C956 341 965 341 972 341C980 341 986 342 992 344C998 345 1003 347 1008 350C1013 353 1019 357 1024 362C1029 366 1035 372 1040 377C1045 383 1051 390 1056 397C1061 404 1067 412 1072 420C1077 428 1083 436 1088 445C1093 454 1099 463 1104 472C1109 480 1115 490 1120 498C1125 507 1131 516 1136 525C1141 533 1139 535 1152 549C1165 563 1192 600 1212 611C1232 621 1252 619 1272 612C1292 605 1312 584 1332 570C1352 555 1372 536 1392 525C1412 515 1432 509 1452 506C1472 502 1492 507 1512 504C1532 500 1552 499 1572 486C1592 473 1612 452 1632 428C1652 404 1672 368 1692 342C1712 316 1742 282 1752 270" stroke="#B0231C" stroke-width="4.2" opacity="0.42" style="--d:0.7s"/>
-    <path pathLength="1" d="M-160 926C-150 927 -120 931 -100 937C-80 942 -60 953 -40 957C-20 961 7 961 20 961C33 961 31 958 36 956C41 954 47 952 52 949C57 946 63 943 68 939C73 936 79 931 84 927C89 923 95 918 100 913C105 908 111 902 116 896C121 891 127 885 132 879C137 873 143 867 148 861C153 855 157 849 160 843C162 838 163 832 164 828C164 824 163 820 162 819C162 817 160 818 160 820C161 823 161 828 165 834C169 840 174 848 183 855C192 862 205 870 219 874C234 879 252 882 269 881C285 880 305 876 320 869C336 862 351 852 363 841C374 830 382 817 388 805C394 794 396 782 398 773C399 763 398 755 397 749C397 742 395 738 395 734C395 731 395 729 396 726C398 724 401 722 405 720C409 718 415 715 420 712C425 710 431 706 436 703C441 700 447 696 452 692C457 688 463 684 468 679C473 675 479 670 484 665C489 661 495 656 500 650C505 645 511 640 516 635C521 630 527 625 532 620C537 614 543 609 548 605C553 600 551 599 564 591C577 583 604 563 624 558C644 553 664 556 684 562C704 567 724 582 744 591C764 601 784 615 804 621C824 628 844 631 864 631C884 632 911 625 924 624C937 622 935 622 940 622C945 621 951 620 956 620C961 620 967 620 972 620C977 620 983 620 988 621C993 622 999 623 1004 625C1009 626 1015 628 1020 630C1025 632 1031 635 1036 638C1041 640 1046 643 1049 647C1053 651 1054 654 1055 659C1056 664 1055 670 1054 677C1054 684 1052 693 1051 703C1050 714 1049 726 1050 740C1051 754 1053 770 1059 785C1065 800 1073 818 1084 832C1095 846 1110 861 1125 871C1141 880 1160 888 1178 891C1195 894 1215 893 1231 890C1247 886 1263 877 1274 869C1286 860 1295 848 1301 837C1307 826 1310 814 1311 804C1313 795 1312 785 1311 778C1311 770 1308 764 1308 759C1307 754 1306 750 1307 746C1307 743 1308 740 1311 737C1314 734 1319 731 1324 728C1329 725 1335 722 1340 719C1345 716 1351 713 1356 710C1361 707 1367 704 1372 702C1377 699 1383 697 1388 695C1393 692 1399 691 1404 689C1409 687 1415 686 1420 685C1425 684 1431 683 1436 682C1441 682 1447 681 1452 681C1457 681 1463 681 1468 681C1473 681 1471 681 1484 681C1497 682 1524 685 1544 682C1564 679 1584 674 1604 661C1624 649 1644 629 1664 608C1684 588 1714 548 1724 536" stroke="#D93025" stroke-width="2.2" opacity="0.6" style="--d:1.05s"/>
-    <path pathLength="1" d="M-160 862C-150 864 -120 871 -100 877C-80 884 -53 895 -40 900C-27 905 -29 905 -24 907C-19 909 -13 911 -8 914C-3 916 3 918 8 920C13 923 19 925 24 927C29 929 35 931 40 933C45 935 51 936 56 938C61 940 66 941 72 943C78 944 84 945 92 946C99 947 108 948 118 948C127 947 138 947 148 944C159 942 170 938 181 933C191 928 202 921 211 913C220 905 228 894 234 884C239 874 243 862 244 851C246 841 244 830 241 822C238 813 233 806 228 802C223 798 216 796 211 797C206 798 202 801 200 806C198 810 198 817 201 823C203 829 208 837 215 842C222 848 231 853 240 856C250 859 261 861 272 862C283 862 294 861 304 859C315 857 325 854 334 851C343 848 351 844 358 840C365 836 370 833 376 829C382 825 387 821 392 818C397 814 403 811 408 808C413 804 419 801 424 798C429 795 435 792 440 789C445 787 451 784 456 782C461 779 467 777 472 775C477 773 483 771 488 769C493 768 499 766 504 765C509 763 515 762 520 761C525 760 531 760 536 759C541 758 547 758 552 758C557 757 563 757 568 757C573 757 579 758 584 758C589 758 594 759 600 759C606 760 613 760 622 761C630 761 640 762 650 761C661 760 673 759 684 757C695 754 708 750 719 744C730 739 741 731 750 723C758 714 765 703 769 694C773 684 775 672 774 664C773 655 768 646 763 642C758 637 749 634 743 635C736 636 728 641 723 647C718 654 714 664 713 675C712 685 714 698 718 709C723 720 731 732 739 741C748 751 759 759 770 766C781 772 794 777 805 780C817 784 829 786 839 787C849 788 859 789 867 789C875 789 882 789 888 789C894 789 899 789 904 789C909 789 915 789 920 789C925 789 931 789 936 789C941 789 947 790 952 790C957 790 963 791 968 791C973 791 979 792 984 793C989 793 995 794 1000 795C1005 796 1011 797 1016 798C1021 799 1027 800 1032 802C1037 803 1035 802 1048 806C1061 810 1088 819 1108 827C1128 835 1148 845 1168 854C1188 862 1208 872 1228 878C1248 884 1268 890 1288 891C1308 893 1328 892 1348 888C1368 884 1388 876 1408 866C1428 856 1448 843 1468 830C1488 816 1508 801 1528 787C1548 773 1568 758 1588 747C1608 735 1628 725 1648 717C1668 710 1698 705 1708 703" stroke="#E8554E" stroke-width="3.0" opacity="0.4" style="--d:1.4s"/>
-    <path pathLength="1" d="M-160 74C-150 69 -120 47 -100 40C-80 34 -53 35 -40 35C-27 34 -29 37 -24 38C-19 40 -13 42 -8 44C-3 46 3 48 8 51C13 54 19 56 24 60C29 63 35 66 40 69C45 73 51 76 56 80C61 83 67 87 72 91C77 94 83 98 88 101C93 105 97 108 101 112C104 116 107 119 109 123C111 127 112 131 113 135C114 140 114 145 115 152C116 158 116 165 118 173C120 181 123 190 127 199C130 207 134 217 139 226C144 235 149 244 155 252C161 260 167 268 175 274C182 281 190 287 198 292C206 297 214 301 223 305C232 310 241 313 252 316C262 319 273 322 285 323C297 325 311 326 325 324C339 322 354 319 368 314C382 308 397 300 409 291C421 281 432 269 441 257C450 245 456 230 461 218C465 205 467 193 469 182C470 171 470 162 469 154C469 147 467 141 465 137C464 133 463 132 462 130C462 129 462 129 464 130C466 130 469 131 473 132C477 133 483 135 488 136C493 137 499 138 504 140C509 141 515 142 520 143C525 144 531 145 536 146C541 147 547 148 552 149C557 150 563 150 568 151C573 151 579 151 584 151C589 151 595 150 600 150C605 149 611 148 616 147C621 146 619 149 632 142C645 136 672 123 692 109C712 95 732 74 752 56C772 39 792 17 812 1C832 -14 852 -29 872 -37C892 -46 912 -49 932 -48C952 -47 972 -40 992 -33C1012 -25 1032 -13 1052 -4C1072 5 1092 15 1112 21C1132 27 1152 30 1172 31C1192 32 1212 28 1232 26C1252 24 1272 19 1292 18C1312 16 1332 16 1352 18C1372 21 1392 27 1412 34C1432 42 1452 53 1472 61C1492 69 1512 78 1532 82C1552 86 1572 87 1592 83C1612 78 1632 68 1652 55C1672 42 1702 13 1712 4" stroke="#B0231C" stroke-width="1.5" opacity="0.5" style="--d:1.75s"/>
-    <path pathLength="1" d="M-160 500C-150 508 -120 531 -100 547C-80 564 -60 583 -40 599C-20 615 0 631 20 642C40 653 60 662 80 666C100 669 120 668 140 664C160 659 187 645 200 640C213 634 211 634 216 631C221 628 227 625 232 621C237 618 243 615 248 611C253 608 259 605 264 601C269 598 275 595 280 591C285 588 292 585 296 582C300 578 304 575 306 573C308 570 308 568 308 567C308 567 306 567 305 570C305 573 303 579 305 586C307 593 310 603 317 611C324 620 335 631 348 638C362 645 380 651 396 652C413 653 433 650 449 644C465 638 481 627 492 617C503 607 510 593 515 582C520 571 521 560 522 552C522 544 520 538 519 533C519 529 517 527 518 525C518 524 520 524 523 523C526 523 531 523 536 523C541 522 547 522 552 522C557 522 563 521 568 521C573 521 579 520 584 520C589 519 595 519 600 518C605 517 611 517 616 516C621 515 627 515 632 514C637 513 643 512 648 511C653 510 659 509 664 509C669 508 675 507 680 506C685 505 683 505 696 503C709 501 736 496 756 496C776 496 796 496 816 501C836 506 856 514 876 526C896 537 916 553 936 569C956 586 976 606 996 624C1016 642 1036 662 1056 678C1076 693 1096 707 1116 716C1136 726 1163 730 1176 733C1189 735 1187 733 1192 733C1197 732 1203 732 1208 731C1213 731 1219 730 1224 728C1229 727 1235 726 1240 724C1245 723 1251 721 1256 719C1261 717 1267 715 1272 713C1277 711 1282 708 1285 706C1287 704 1289 702 1289 701C1290 700 1289 699 1289 701C1288 702 1287 705 1288 710C1289 715 1291 722 1296 730C1301 737 1308 746 1319 753C1329 760 1344 767 1359 769C1374 772 1392 772 1409 769C1425 765 1442 757 1455 748C1468 740 1479 727 1487 715C1495 704 1499 691 1502 681C1505 671 1504 662 1504 656C1504 649 1503 644 1503 641C1503 637 1503 636 1504 634C1506 632 1509 632 1513 631C1517 630 1523 630 1528 629C1533 629 1539 628 1544 627C1549 627 1555 626 1560 626C1565 625 1571 624 1576 624C1581 623 1587 622 1592 621C1597 620 1603 619 1608 618C1613 617 1619 616 1624 615C1629 614 1635 613 1640 611C1645 610 1651 609 1656 607C1661 606 1659 607 1672 602C1685 598 1722 584 1732 581" stroke="#D93025" stroke-width="2.6" opacity="0.45" style="--d:2.1s"/>
-  </g>
-</svg>
+<!-- Photography page background: random red swirly lines, generated and animated by the script -->
+<svg class="pbg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-linejoin="round"></g></svg>
 
 <div class="site">
   <nav class="side">
@@ -289,13 +273,13 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
       <ul class="list">
         <li class="row"><button class="it" data-id="r9dWVg-kKuQ">2026 Senior Sign Out</button></li>
         <li class="row"><button class="it" data-id="t6mg6VqMOVI">Floating Ideas</button></li>
-        <li class="row"><button class="it" data-id="6bT-Zg5N5jU">Practicing Cinematography</button></li>
-        <li class="row"><button class="it" data-id="nP12Rfxg6Qk">SMHS Basketball Senior Night 26</button></li>
         <li class="row"><button class="it" data-id="b2n_G1oPKVA">Fractals</button></li>
-        <li class="row"><button class="it" data-id="ptNAgH3mzdg">DITTO - Editor</button></li>
-        <li class="row"><button class="it" data-id="u5Dw-aSX4qk">VASTRA</button></li>
-        <li class="row"><button class="it" data-id="PcHXKPE1Z3E">TeamLabs Biovortex</button></li>
         <li class="row"><button class="it" data-id="DYOTWswVBrQ">Japan Edit</button></li>
+        <li class="row"><button class="it" data-id="nP12Rfxg6Qk">SMHS Basketball Senior Night 26</button></li>
+        <li class="row"><button class="it" data-id="6bT-Zg5N5jU">Practicing Cinematography</button></li>
+        <li class="row"><button class="it" data-id="PcHXKPE1Z3E">TeamLabs Biovortex</button></li>
+        <li class="row"><button class="it" data-id="u5Dw-aSX4qk">VASTRA</button></li>
+        <li class="row"><button class="it" data-id="ptNAgH3mzdg">DITTO - Editor</button></li>
       </ul>
     </section>
 
@@ -393,7 +377,6 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   <button class="x" aria-label="Close">&times;</button>
   <button class="nav prev" aria-label="Previous photo" hidden>&lsaquo;</button>
   <button class="nav next" aria-label="Next photo" hidden>&rsaquo;</button>
-  <div class="zoomctl" hidden><button class="zb" data-z="out" aria-label="Zoom out">&minus;</button><button class="zb" data-z="in" aria-label="Zoom in">+</button></div>
   <div class="lb-box"></div>
 </div>
 
@@ -425,6 +408,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     body.classList.toggle('on-content', id === 'content');
     body.classList.toggle('on-videography', id === 'videography');
     body.classList.toggle('on-photography', id === 'photography');
+    if (id !== 'photography') pbgStop();
     vbgPlay(id === 'videography');
     document.documentElement.classList.toggle('hide-sb', id === 'videography');
     const next = $('#' + id), prev = $('.view.on'), t = ++token;
@@ -435,6 +419,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
       next.classList.add('on');
       scrollTo(0, 0);
       vbarUpdate();
+      if (id === 'photography') pbgStart();
       if (id === 'content') { ccLayout(); cur = 0; }
     };
     if (prev && !first) { prev.classList.add('leave'); setTimeout(swap, 320); } else swap();
@@ -511,6 +496,7 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     body.classList.remove('on-about', 'on-content', 'on-videography', 'on-photography');
     vbgPlay(false);
     document.documentElement.classList.remove('hide-sb');
+    pbgStop();
     site.classList.remove('on');
     try { history.replaceState(null, '', location.pathname + location.search); } catch (err) {}
     clearTimeout(timer); w = 0; c = 0; del = false; typeEl.textContent = ''; tick(); popStars();
@@ -525,13 +511,13 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
   intro.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); clap(); } });
 
   /* lightbox: photos (arrow keys or buttons to browse) and the video player */
-  const photos = $$('.ph'), lb = $('.lb'), box = $('.lb-box'), prevB = $('.lb .prev'), nextB = $('.lb .next'), zc = $('.zoomctl');
-  let gi = -1, zImg = null, z = { s: 1, x: 0, y: 0 };
+  const photos = $$('.ph'), lb = $('.lb'), box = $('.lb-box'), prevB = $('.lb .prev'), nextB = $('.lb .next');
+  let gi = -1;
   function openLb(node, browse) {
     box.replaceChildren(node);
     lb.classList.add('on');
     body.classList.add('locked');
-    prevB.hidden = nextB.hidden = zc.hidden = !browse;
+    prevB.hidden = nextB.hidden = !browse;
     if (!browse) gi = -1;
     $('.x').focus();
   }
@@ -541,7 +527,6 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     body.classList.remove('locked');
     gi = -1;
     if (reelRO) { reelRO.disconnect(); reelRO = null; }
-    zImg = null;
   }
   function openPhoto(i) {
     gi = (i + photos.length) % photos.length;
@@ -549,83 +534,19 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     n.src = photos[gi].dataset.full || t.src;
     n.alt = t.alt;
     openLb(n, true);
-    initZoom(n);
   }
   lb.addEventListener('click', e => {
     if (e.target === lb || e.target === box || e.target.closest('.x')) closeLb();
     else if (e.target === prevB) openPhoto(gi - 1);
     else if (e.target === nextB) openPhoto(gi + 1);
-    else if (e.target.closest('.zb')) zoomBy(e.target.closest('.zb').dataset.z === 'in' ? 1.5 : 1 / 1.5);
   });
   document.addEventListener('keydown', e => {
     if (!lb.classList.contains('on')) return;
     if (e.key === 'Escape') closeLb();
     else if (gi > -1 && e.key === 'ArrowLeft') openPhoto(gi - 1);
     else if (gi > -1 && e.key === 'ArrowRight') openPhoto(gi + 1);
-    else if (zImg && (e.key === '+' || e.key === '=')) zoomBy(1.5);
-    else if (zImg && (e.key === '-' || e.key === '_')) zoomBy(1 / 1.5);
-    else if (zImg && e.key === '0') resetZoom();
   });
 
-  /* photo zoom: wheel / trackpad pinch / pinch on phones / double-click / buttons / + - 0 keys; drag to move around */
-  const applyZ = (smooth = true) => {
-    if (!zImg) return;
-    const mx = Math.max(0, (zImg.offsetWidth * z.s - box.clientWidth) / 2), my = Math.max(0, (zImg.offsetHeight * z.s - box.clientHeight) / 2);
-    z.x = Math.max(-mx, Math.min(mx, z.x));
-    z.y = Math.max(-my, Math.min(my, z.y));
-    zImg.style.transition = smooth ? 'transform .2s ease-out' : 'none';
-    zImg.style.transform = z.s === 1 ? '' : `translate(${z.x}px,${z.y}px) scale(${z.s})`;
-  };
-  function zoomAt(px, py, ns, smooth = true) {                      // zoom keeping the point (px, py) fixed
-    if (!zImg) return;
-    ns = Math.min(4, Math.max(1, ns));
-    const r = zImg.getBoundingClientRect(), cx = r.left + r.width / 2 - z.x, cy = r.top + r.height / 2 - z.y, f = ns / z.s;
-    z.x = (px - cx) - (px - cx - z.x) * f;
-    z.y = (py - cy) - (py - cy - z.y) * f;
-    z.s = ns;
-    if (ns === 1) z.x = z.y = 0;
-    applyZ(smooth);
-  }
-  const zoomBy = f => { const r = box.getBoundingClientRect(); zoomAt(r.left + r.width / 2, r.top + r.height / 2, z.s * f); };
-  const resetZoom = () => { z.s = 1; z.x = z.y = 0; applyZ(); };
-  function initZoom(img) {
-    zImg = img; z = { s: 1, x: 0, y: 0 };
-    img.draggable = false;
-    const ptrs = new Map();
-    let last = null, startDist = 1, startS = 1;
-    img.addEventListener('pointerdown', e => {
-      img.setPointerCapture(e.pointerId);
-      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; startDist = Math.hypot(a.x - b.x, a.y - b.y) || 1; startS = z.s; }
-      last = { x: e.clientX, y: e.clientY };
-    });
-    img.addEventListener('pointermove', e => {
-      if (!ptrs.has(e.pointerId)) return;
-      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      if (ptrs.size === 2) {
-        const [a, b] = [...ptrs.values()];
-        zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, startS * Math.hypot(a.x - b.x, a.y - b.y) / startDist, false);
-      } else if (z.s > 1 && last) {
-        z.x += e.clientX - last.x; z.y += e.clientY - last.y;
-        applyZ(false);
-      }
-      last = { x: e.clientX, y: e.clientY };
-    });
-    const end = e => {
-      ptrs.delete(e.pointerId);
-      last = null;
-      if (ptrs.size === 1) { const q = [...ptrs.values()][0]; last = { x: q.x, y: q.y }; }
-      applyZ();
-    };
-    img.addEventListener('pointerup', end);
-    img.addEventListener('pointercancel', end);
-    img.addEventListener('dblclick', e => zoomAt(e.clientX, e.clientY, z.s > 1 ? 1 : 2.6));
-  }
-  box.addEventListener('wheel', e => {
-    if (!zImg) return;
-    e.preventDefault();
-    zoomAt(e.clientX, e.clientY, z.s * Math.exp(-e.deltaY * (e.ctrlKey ? .01 : .002)), false);
-  }, { passive: false });
 
   /* photo collage: 3 columns (2 on phones); each photo goes into the shortest column so they read left to right */
   const gal = $('.gallery');
@@ -756,6 +677,63 @@ body.entering .view.on .row,body.entering .view.on .ph,body.entering .view.on .a
     loadIG().then(() => window.instgrm && instgrm.Embeds.process()).catch(() => {});
   }
   reels.forEach(r => r.addEventListener('click', () => openReel(r)));
+
+  /* photography background: random red swirly lines that draw in slowly, linger a few seconds, wipe away, and get replaced by new ones */
+  const pbgG = $('.pbg g'), REDS = ['#D93025', '#E8554E', '#B0231C'];
+  let pbgOn = false, pbgGen = 0;
+  const rnd = (a, b) => a + Math.random() * (b - a), sstep = u => { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); };
+  function swirlPath() {
+    const y0 = rnd(40, 860), slope = rnd(-.18, .18);
+    const A1 = rnd(60, 130), k1 = 2 * Math.PI / rnd(900, 1500), ph1 = rnd(0, 6.28);
+    const A2 = rnd(20, 55), k2 = 2 * Math.PI / rnd(350, 600), ph2 = rnd(0, 6.28);
+    const curls = Array.from({ length: Math.random() < .5 ? 1 : 2 }, () => ({ xc: rnd(200, 1400), L: rnd(230, 320), r: rnd(55, 85) * (Math.random() < .5 ? -1 : 1) }));
+    const P = [];
+    for (let x = -160; x < 1760;) {                                   // waves, plus a loop-the-loop curl or two
+      let ox = 0, oy = 0, near = 1e9;
+      for (const c of curls) {
+        const t = 2 * Math.PI * sstep((x - (c.xc - c.L / 2)) / c.L);
+        ox -= c.r * Math.sin(t); oy += c.r * (1 - Math.cos(t));
+        near = Math.min(near, Math.max(0, Math.abs(x - c.xc) - c.L / 2));
+      }
+      P.push([x + ox, y0 + slope * (x - 800) + A1 * Math.sin(k1 * x + ph1) + A2 * Math.sin(k2 * x + ph2) + oy]);
+      x += near < 150 ? 16 : 60;
+    }
+    const f = n => n.toFixed(0);
+    return P.reduce((d, q, i) => {                                     // smooth curve through the points
+      if (!i) return `M${f(q[0])} ${f(q[1])}`;
+      const a = P[i - 2] || P[i - 1], b = P[i - 1], c = P[i + 1] || q;
+      return d + `C${f(b[0] + (q[0] - a[0]) / 6)} ${f(b[1] + (q[1] - a[1]) / 6)} ${f(q[0] - (c[0] - b[0]) / 6)} ${f(q[1] - (c[1] - b[1]) / 6)} ${f(q[0])} ${f(q[1])}`;
+    }, '');
+  }
+  function spawnLine(el, delay, gen) {
+    el.setAttribute('d', swirlPath());
+    el.setAttribute('transform', `rotate(${(rnd(-30, 30) + (Math.random() < .3 ? 90 : 0)).toFixed(0)} 800 450)`);
+    el.setAttribute('stroke', REDS[(Math.random() * REDS.length) | 0]);
+    el.setAttribute('stroke-width', rnd(1.4, 4.2).toFixed(1));
+    el.setAttribute('opacity', rnd(.38, .62).toFixed(2));
+    el.animate([
+      { strokeDashoffset: 1, easing: 'ease-in-out' },                 // draws in slowly
+      { strokeDashoffset: 0, offset: .46 },
+      { strokeDashoffset: 0, offset: .62, easing: 'ease-in-out' },    // lingers a few seconds
+      { strokeDashoffset: -1 }                                        // then wipes away from the start
+    ], { duration: rnd(15000, 19000), delay, fill: 'both' }).onfinish = () => { if (pbgOn && gen === pbgGen) spawnLine(el, rnd(0, 1500), gen); };
+  }
+  function pbgStart() {
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    pbgOn = true;
+    const gen = ++pbgGen;
+    pbgG.replaceChildren();
+    for (let i = 0; i < 7; i++) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      el.setAttribute('pathLength', 1);
+      pbgG.append(el);
+      spawnLine(el, i * rnd(500, 1300), gen);
+    }
+  }
+  function pbgStop() {
+    pbgOn = false; pbgGen++;
+    setTimeout(() => { if (!pbgOn) pbgG.replaceChildren(); }, 900);   // after the page has faded out
+  }
 
   // deep link / refresh on a page skips the intro (runs last so everything above is initialised)
   if (ids.includes(location.hash.slice(1))) enter(true);
